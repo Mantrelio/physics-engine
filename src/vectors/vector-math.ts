@@ -50,4 +50,8 @@ export class VectorMath {
             vector.x * sin + vector.y * cos
         );
     }
+
+    static magnitude(vector: Vector): number {
+        return Math.sqrt(vector.x * vector.x + vector.y * vector.y);
+    }
 }
