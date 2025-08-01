@@ -1,4 +1,4 @@
-import { Vector } from "./vector";
+import { Vector } from "./entities/vector";
 
 export class VectorMath {
     static add(...vectors: Vector[]): Vector {

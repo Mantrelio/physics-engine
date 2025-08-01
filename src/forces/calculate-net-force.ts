@@ -1,6 +1,6 @@
-import { Vector } from "../vectors/vector";
+import { Vector } from "../vectors/entities/vector";
 import { VectorMath } from "../vectors/vector-math";
-import { Force } from "./force";
+import { Force } from "./entities/force";
 import { CalculateNetForceInterface } from "./interfaces/calculate-net-force.interface";
 
 export class NetForceCalculator implements CalculateNetForceInterface{

@@ -1,5 +1,5 @@
-import { Vector } from "../vectors/vector";
-import { VectorMath } from "../vectors/vector-math";
+import { Vector } from "../../vectors/entities/vector";
+import { VectorMath } from "../../vectors/vector-math";
 
 export class Force extends Vector {
     public readonly magnitude: number;
