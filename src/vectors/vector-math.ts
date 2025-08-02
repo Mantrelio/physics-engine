@@ -33,6 +33,10 @@ export class VectorMath {
         return new Vector(vector.x * scalar, vector.y * scalar);
     }
 
+    static divide(vector: Vector, scalar: number) {
+        return new Vector(vector.x / scalar, vector.y / scalar);
+    }
+
     static dot(vector1: Vector, vector2: Vector): number {
         return (vector1.x * vector2.x + vector1.y * vector2.y);
     }
