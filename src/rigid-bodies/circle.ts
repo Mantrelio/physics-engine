@@ -9,10 +9,9 @@ export class Circle extends RigidBody {
         private readonly radius: number,
         mass: number,   
         velocity?: Vector, 
-        acceleration?: Vector,
-        shape: Shape = Shape.CIRCLE
+        acceleration?: Vector
     ) {
-        super(position, velocity, mass, acceleration, shape);
+        super(position, velocity, mass, acceleration, Shape.CIRCLE);
     }
 
     public getRenderData(): CircleRenderData {
