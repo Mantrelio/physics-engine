@@ -8,11 +8,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "physics-engine"
+    "url": "git+https://github.com/Mantrelio/physics-engine.git"
   },
   "author": "",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Mantrelio/physics-engine/issues"
+  },
+  "homepage": "https://github.com/Mantrelio/physics-engine#readme",
   "devDependencies": {
-    "typescript": "^5.8.3"
+    "@types/node": "^24.1.0",
+    "typescript": "^5.9.2",
+    "vite": "^7.0.6"
   }
 }
