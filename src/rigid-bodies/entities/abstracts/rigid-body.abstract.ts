@@ -25,8 +25,6 @@ export abstract class RigidBody {
 
         this.velocity = VectorMath.add(this.velocity, VectorMath.multiply(averageAcceleration, deltaTime));
 
-        this.drawShape();
+        this.forces = [];
     }
-
-    abstract drawShape(): void;
 }
