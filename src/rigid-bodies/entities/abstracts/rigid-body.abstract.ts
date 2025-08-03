@@ -1,16 +1,18 @@
 import { BaseRenderData } from "../../../renderer/interfaces/render-data.interface";
 import { Vector } from "../../../vectors/entities/vector";
 import { VectorMath } from "../../../vectors/vector-math";
+import { Shape } from "../../enums/shape.enum";
 
 export abstract class RigidBody {
     constructor(
-        public position: Vector,
-        private velocity: Vector = new Vector(0, 0),
-        private mass: number = 1,
-        private acceleration: Vector = new Vector(0, 0)
+        protected position: Vector,
+        protected velocity: Vector = new Vector(0, 0),
+        protected readonly mass: number,
+        protected acceleration: Vector = new Vector(0, 0),
+        protected readonly shape: Shape
     ) {}
 
-    private forces: Vector[] = [];
+    protected forces: Vector[] = [];
 
     //TODO: assign public for clarification
     addForce(force: Vector): void {
