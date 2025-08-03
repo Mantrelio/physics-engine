@@ -16,13 +16,31 @@ export class World {
         this.renderer = new CanvasRenderer(ctx);
     }
 
-    addObject(object: RigidBody): void {
-        this.objects.push(object);
+    public run() {
+        let lastFrameTime = 0;
+
+        const simulationLoop = (currentTime: number) => {
+            const deltaTime = (currentTime - lastFrameTime) / 1000;
+            lastFrameTime = currentTime;
+
+            if(deltaTime > 0) this.update(deltaTime);
+            
+            requestAnimationFrame(simulationLoop);
+        }
+
+        requestAnimationFrame(simulationLoop);
+
     }
+
     //TODO: seperate physics engine and renderer run time, physics should run at a higher frequency
-    update(deltaTime: number): void {
+    private update(deltaTime: number): void {
         this.objects.forEach(object => object.updatePosition(deltaTime));
         
         this.renderer.render(this.objects);
+    }
+
+
+    public addObject(object: RigidBody): void {
+        this.objects.push(object);
     }
 }
