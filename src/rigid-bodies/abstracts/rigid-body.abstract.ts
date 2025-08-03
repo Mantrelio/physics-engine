@@ -1,7 +1,7 @@
-import { BaseRenderData } from "../../../renderer/interfaces/render-data.interface";
-import { Vector } from "../../../vectors/entities/vector";
-import { VectorMath } from "../../../vectors/vector-math";
-import { Shape } from "../../enums/shape.enum";
+import { BaseRenderData } from "../../renderer/interfaces/render-data.interface";
+import { Vector } from "../../vectors/entities/vector";
+import { VectorMath } from "../../vectors/vector-math";
+import { Shape } from "../enums/shape.enum";
 
 export abstract class RigidBody {
     constructor(

@@ -1,7 +1,7 @@
-import { Vector } from "../../vectors/entities/vector";
+import { Vector } from "../vectors/entities/vector";
 import { RigidBody } from "./abstracts/rigid-body.abstract";
-import { Shape } from "../enums/shape.enum";
-import { CircleRenderData } from "../../renderer/interfaces/render-data.interface";
+import { Shape } from "./enums/shape.enum";
+import { CircleRenderData } from "../renderer/interfaces/render-data.interface";
 
 export class Circle extends RigidBody {
     constructor(
