@@ -1,5 +1,6 @@
 import { CanvasRenderer } from "../renderer/canvas-renderer";
 import { RigidBody } from "../rigid-bodies/abstracts/rigid-body.abstract";
+import { Vector } from "../vectors/entities/vector";
 
 export class World {
     private objects: RigidBody[] = [];
@@ -16,10 +17,12 @@ export class World {
         this.renderer = new CanvasRenderer(ctx);
     }
 
-    public run() {
+    public run(): void {
         let lastFrameTime = 0;
-
+        
         const simulationLoop = (currentTime: number) => {
+            if (lastFrameTime === 0) lastFrameTime = currentTime;
+
             const deltaTime = (currentTime - lastFrameTime) / 1000;
             lastFrameTime = currentTime;
 
@@ -34,13 +37,18 @@ export class World {
 
     //TODO: seperate physics engine and renderer run time, physics should run at a higher frequency
     private update(deltaTime: number): void {
+        if (deltaTime < 0.001 || deltaTime > 0.1) return;
+
         this.objects.forEach(object => object.updatePosition(deltaTime));
-        
         this.renderer.render(this.objects);
     }
 
-
     public addObject(object: RigidBody): void {
         this.objects.push(object);
+    }
+
+    public applyGravity(): void {
+        const g = new Vector(0, 980)
+        this.objects.forEach(object => object.addAcceleration(g));
     }
 }
