@@ -21,8 +21,8 @@ export abstract class RigidBody {
 
         this.position = VectorMath.add(
             this.position, 
-            VectorMath.multiply(this.velocity, deltaTime), 
-            VectorMath.multiply(this.acceleration, deltaTime * deltaTime * 0.5)
+            VectorMath.multiply(VectorMath.multiply(this.velocity, deltaTime), 100), 
+            VectorMath.multiply(VectorMath.multiply(this.acceleration, deltaTime * deltaTime * 0.5), 100)
         );
 
         const averageAcceleration: Vector = VectorMath.divide(
