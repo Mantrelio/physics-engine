@@ -6,6 +6,15 @@ export class World {
     private objects: RigidBody[] = [];
     private renderer: CanvasRenderer;
 
+    private readonly fixedTimeStep: number = 1/60;
+    private accumulator: number = 0;
+    private readonly physicsStepsLimit: number = 4;
+    
+    // FPS tracking
+    private frameCount: number = 0;
+    private lastFpsUpdate: number = 0;
+    private currentFps: number = 0;
+
     constructor(canvasId: string) {
         const canvas = document.getElementById(canvasId) as HTMLCanvasElement;
         if (!canvas) throw new Error(`Canvas with id '${canvasId}' not found`);
@@ -26,21 +35,33 @@ export class World {
             const deltaTime = (currentTime - lastFrameTime) / 1000;
             lastFrameTime = currentTime;
 
-            if(deltaTime > 0) this.update(deltaTime);
+            if(deltaTime > 0) this.fixedTimeStepUpdate(deltaTime);
             
             requestAnimationFrame(simulationLoop);
         }
 
         requestAnimationFrame(simulationLoop);
-
     }
 
-    //TODO: seperate physics engine and renderer run time, physics should run at a higher frequency
-    private update(deltaTime: number): void {
-        if (deltaTime < 0.001 || deltaTime > 0.1) return;
+    private fixedTimeStepUpdate(deltaTime: number) {
+        this.accumulator += deltaTime;
 
-        this.objects.forEach(object => object.updatePosition(deltaTime));
+        let physicsStepsCount: number = 0;
+
+        while(this.accumulator >= this.fixedTimeStep && physicsStepsCount < this.physicsStepsLimit) {
+            this.updatePhysics(this.fixedTimeStep);
+
+            this.accumulator -= this.fixedTimeStep;
+            physicsStepsCount++;
+        }
+
+        if (physicsStepsCount >= this.physicsStepsLimit) this.accumulator = 0;
+
         this.renderer.render(this.objects);
+    }
+
+    private updatePhysics(deltaTime: number) {
+        this.objects.forEach(object => object.updatePosition(deltaTime));
     }
 
     public addObject(object: RigidBody): void {
@@ -48,7 +69,7 @@ export class World {
     }
 
     public applyGravity(): void {
-        const g = new Vector(0, 980)
+        const g = new Vector(0, 9.8)
         this.objects.forEach(object => object.addAcceleration(g));
     }
 }
