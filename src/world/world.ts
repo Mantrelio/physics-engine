@@ -9,11 +9,6 @@ export class World {
     private readonly fixedTimeStep: number = 1/60;
     private accumulator: number = 0;
     private readonly physicsStepsLimit: number = 4;
-    
-    // FPS tracking
-    private frameCount: number = 0;
-    private lastFpsUpdate: number = 0;
-    private currentFps: number = 0;
 
     constructor(canvasId: string) {
         const canvas = document.getElementById(canvasId) as HTMLCanvasElement;
@@ -44,7 +39,9 @@ export class World {
     }
 
     private fixedTimeStepUpdate(deltaTime: number) {
-        this.accumulator += deltaTime;
+        const cappedDeltaTime = Math.min(deltaTime, 0.25);
+
+        this.accumulator += cappedDeltaTime;
 
         let physicsStepsCount: number = 0;
 
