@@ -6,10 +6,10 @@ import { Shape } from "../enums/shape.enum";
 export abstract class RigidBody {
     constructor(
         protected position: Vector,
-        protected velocity: Vector = new Vector(0, 0),
+        public velocity: Vector = new Vector(0, 0),
         protected readonly mass: number,
         protected acceleration: Vector = new Vector(0, 0),
-        protected readonly shape: Shape
+        public readonly shape: Shape
     ) {}
 
     public addAcceleration(acceleration: Vector): void {
@@ -34,6 +34,10 @@ export abstract class RigidBody {
             this.velocity, 
             VectorMath.multiply(averageAcceleration, deltaTime)
         );
+    }
+
+    public get Position(): Vector {
+        return this.position;
     }
 
     abstract getRenderData(): BaseRenderData;

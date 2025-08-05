@@ -4,6 +4,7 @@ export interface BaseRenderData {
     type: Shape;
     x: number;
     y: number;
+    color: string;
 }
 
 export interface CircleRenderData extends BaseRenderData {

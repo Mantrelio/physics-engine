@@ -1,16 +1,22 @@
 import { CanvasRenderer } from "../renderer/canvas-renderer";
 import { RigidBody } from "../rigid-bodies/abstracts/rigid-body.abstract";
+import { Circle } from "../rigid-bodies/circle";
+import { Shape } from "../rigid-bodies/enums/shape.enum";
 import { Vector } from "../vectors/entities/vector";
 
 export class World {
     private objects: RigidBody[] = [];
     private renderer: CanvasRenderer;
+    public readonly canvasWidth: number;
+    public readonly canvasHeight: number;
 
     private readonly fixedTimeStep: number = 1/60;
     private accumulator: number = 0;
     private readonly physicsStepsLimit: number = 4;
 
-    constructor(canvasId: string) {
+    constructor(
+        canvasId: string,
+    ) {
         const canvas = document.getElementById(canvasId) as HTMLCanvasElement;
         if (!canvas) throw new Error(`Canvas with id '${canvasId}' not found`);
         
@@ -19,6 +25,9 @@ export class World {
         if (!ctx) throw new Error('Could not get 2D context from canvas');
         
         this.renderer = new CanvasRenderer(ctx);
+
+        this.canvasWidth = canvas.width;
+        this.canvasHeight = canvas.height;
     }
 
     public run(): void {
@@ -58,7 +67,10 @@ export class World {
     }
 
     private updatePhysics(deltaTime: number) {
-        this.objects.forEach(object => object.updatePosition(deltaTime));
+        this.objects.forEach(object => {
+            object.updatePosition(deltaTime);
+            this.applyConstraints(object);
+        });
     }
 
     public addObject(object: RigidBody): void {
@@ -68,5 +80,29 @@ export class World {
     public applyGravity(): void {
         const g = new Vector(0, 9.8)
         this.objects.forEach(object => object.addAcceleration(g));
+    }
+
+    private applyConstraints(rigidBody: RigidBody): void {
+        if(rigidBody instanceof Circle) {
+            if(rigidBody.Position.x - rigidBody.radius <= 0) {
+                rigidBody.Position.x = rigidBody.radius;
+                rigidBody.velocity.x = -rigidBody.velocity.x;
+            }
+
+            if(rigidBody.Position.x + rigidBody.radius >= this.canvasWidth) {
+                rigidBody.Position.x = this.canvasWidth - rigidBody.radius;
+                rigidBody.velocity.x = -rigidBody.velocity.x;
+            }
+
+            if(rigidBody.Position.y - rigidBody.radius <= 0) {
+                rigidBody.Position.y = rigidBody.radius;
+                rigidBody.velocity.y = -rigidBody.velocity.y;
+            }
+
+            if(rigidBody.Position.y + rigidBody.radius >= this.canvasHeight) {
+                rigidBody.Position.y = this.canvasHeight - rigidBody.radius;
+                rigidBody.velocity.y = -rigidBody.velocity.y;
+            }
+        }
     }
 }
