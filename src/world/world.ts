@@ -1,12 +1,13 @@
+import { CollisionDetection } from "../collisions/collision-detection";
 import { CanvasRenderer } from "../renderer/canvas-renderer";
 import { RigidBody } from "../rigid-bodies/abstracts/rigid-body.abstract";
 import { Circle } from "../rigid-bodies/circle";
-import { Shape } from "../rigid-bodies/enums/shape.enum";
 import { Vector } from "../vectors/entities/vector";
 
 export class World {
     private objects: RigidBody[] = [];
     private renderer: CanvasRenderer;
+    private collisionDetection: CollisionDetection;
     public readonly canvasWidth: number;
     public readonly canvasHeight: number;
 
@@ -28,6 +29,8 @@ export class World {
 
         this.canvasWidth = canvas.width;
         this.canvasHeight = canvas.height;
+
+        this.collisionDetection = new CollisionDetection(this.canvasWidth, this.canvasHeight);
     }
 
     public run(): void {
@@ -56,6 +59,7 @@ export class World {
 
         while(this.accumulator >= this.fixedTimeStep && physicsStepsCount < this.physicsStepsLimit) {
             this.updatePhysics(this.fixedTimeStep);
+            this.collisionDetection.checkForCollision(this.objects);
 
             this.accumulator -= this.fixedTimeStep;
             physicsStepsCount++;
@@ -84,23 +88,23 @@ export class World {
 
     private applyConstraints(rigidBody: RigidBody): void {
         if(rigidBody instanceof Circle) {
-            if(rigidBody.Position.x - rigidBody.radius <= 0) {
-                rigidBody.Position.x = rigidBody.radius;
+            if(rigidBody.position.x - rigidBody.radius <= 0) {
+                rigidBody.position.x = rigidBody.radius;
                 rigidBody.velocity.x = -rigidBody.velocity.x;
             }
 
-            if(rigidBody.Position.x + rigidBody.radius >= this.canvasWidth) {
-                rigidBody.Position.x = this.canvasWidth - rigidBody.radius;
+            if(rigidBody.position.x + rigidBody.radius >= this.canvasWidth) {
+                rigidBody.position.x = this.canvasWidth - rigidBody.radius;
                 rigidBody.velocity.x = -rigidBody.velocity.x;
             }
 
-            if(rigidBody.Position.y - rigidBody.radius <= 0) {
-                rigidBody.Position.y = rigidBody.radius;
+            if(rigidBody.position.y - rigidBody.radius <= 0) {
+                rigidBody.position.y = rigidBody.radius;
                 rigidBody.velocity.y = -rigidBody.velocity.y;
             }
 
-            if(rigidBody.Position.y + rigidBody.radius >= this.canvasHeight) {
-                rigidBody.Position.y = this.canvasHeight - rigidBody.radius;
+            if(rigidBody.position.y + rigidBody.radius >= this.canvasHeight) {
+                rigidBody.position.y = this.canvasHeight - rigidBody.radius;
                 rigidBody.velocity.y = -rigidBody.velocity.y;
             }
         }

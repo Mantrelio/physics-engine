@@ -58,4 +58,14 @@ export class VectorMath {
     static magnitude(vector: Vector): number {
         return Math.sqrt(vector.x * vector.x + vector.y * vector.y);
     }
+
+    static distance(vector1: Vector, vector2: Vector): number {
+        const dx = vector1.x - vector2.x;
+        const dy = vector1.y - vector2.y;
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    static normalize(vector: Vector): Vector {
+        return VectorMath.divide(vector, VectorMath.magnitude(vector));
+    }
 }
