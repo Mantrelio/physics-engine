@@ -11,7 +11,7 @@ export class CollisionDetection {
     }
 
     public checkForCollision(worldObjects: RigidBody[]) {
-        for(let i = 0; i < worldObjects.length - 1; i++) {
+        for(let i = 0; i < worldObjects.length; i++) {
             for(let j = i + 1; j < worldObjects.length; j++) {
                 if (this.areColliding(worldObjects[i], worldObjects[j])) {
                     this.resolveCollision(worldObjects[i], worldObjects[j]);
