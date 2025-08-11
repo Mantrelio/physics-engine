@@ -7,7 +7,7 @@ export abstract class RigidBody {
     constructor(
         public position: Vector,
         public velocity: Vector = new Vector(0, 0),
-        protected readonly mass: number,
+        public readonly mass: number,
         protected acceleration: Vector = new Vector(0, 0),
         public readonly shape: Shape
     ) {}
