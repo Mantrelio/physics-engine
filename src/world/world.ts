@@ -126,17 +126,12 @@ export class World {
 
     private applyDrag(): void {
         this.objects.forEach(object => {
-            if (object.velocity.x === 0 && object.velocity.y === 0) {
-                return;
-            }
+            if (object.velocity.x === 0 && object.velocity.y === 0) return;
                 
             if (object instanceof Circle) {
-                const dragAcceleration: Vector = VectorMath.multiply(
-                    VectorMath.multiply(object.velocity, 0.5*this.airDensity*object.radius*VectorMath.magnitude(object.velocity)*this.dragCoefficients[object.shape] / object.mass),
-                    -1
-                );
-
-                object.velocity = VectorMath.add(object.velocity, VectorMath.multiply(dragAcceleration, this.fixedTimeStep));
+                const dragDirectionalVector: Vector = VectorMath.multiply(VectorMath.normalize(object.velocity), -1);
+                const dragForce: Vector = VectorMath.multiply(dragDirectionalVector, VectorMath.magnitude(object.velocity)*this.dragCoefficients[object.shape]*this.airDensity*0.5); 
+                object.applyForce(dragForce);
             }
         });
     }
