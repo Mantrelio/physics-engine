@@ -91,9 +91,8 @@ export class World {
     }
 
     public applyGravity(): void {
-        const gravityForce: Vector = new Vector(0, 9.8); 
-
         this.objects.forEach(object => {
+            const gravityForce: Vector = new Vector(0, 9.8*object.mass); 
             object.applyForce(gravityForce);
         });
     }
