@@ -65,7 +65,6 @@ export class World {
         let physicsStepsCount: number = 0;
 
         while(this.accumulator >= this.fixedTimeStep && physicsStepsCount < this.physicsStepsLimit) {
-            this.applyDrag();
             this.updatePhysics(this.fixedTimeStep);
             this.collisionDetection.checkForCollision(this.objects);
 
@@ -80,6 +79,8 @@ export class World {
 
     private updatePhysics(deltaTime: number) {
         this.objects.forEach(object => {
+            this.applyGravity();
+            this.applyDrag();
             object.updatePosition(deltaTime);
             this.applyConstraints(object);
         });
@@ -90,30 +91,33 @@ export class World {
     }
 
     public applyGravity(): void {
-        const g = new Vector(0, 9.8);
-        this.objects.forEach(object => object.addAcceleration(g));
+        const gravityForce: Vector = new Vector(0, 9.8); 
+
+        this.objects.forEach(object => {
+            object.applyForce(gravityForce);
+        });
     }
 
     private applyConstraints(rigidBody: RigidBody): void {
         const restitution = 0.8;
 
-        if(rigidBody instanceof Circle) {
-            if(rigidBody.position.x - rigidBody.radius <= 0) {
+        if (rigidBody instanceof Circle) {
+            if (rigidBody.position.x - rigidBody.radius <= 0) {
                 rigidBody.position.x = rigidBody.radius;
                 rigidBody.velocity.x = -rigidBody.velocity.x * restitution;
             }
 
-            if(rigidBody.position.x + rigidBody.radius >= this.canvasWidth) {
+            if (rigidBody.position.x + rigidBody.radius >= this.canvasWidth) {
                 rigidBody.position.x = this.canvasWidth - rigidBody.radius;
                 rigidBody.velocity.x = -rigidBody.velocity.x * restitution;
             }
 
-            if(rigidBody.position.y - rigidBody.radius <= 0) {
+            if (rigidBody.position.y - rigidBody.radius <= 0) {
                 rigidBody.position.y = rigidBody.radius;
                 rigidBody.velocity.y = -rigidBody.velocity.y * restitution;
             }
 
-            if(rigidBody.position.y + rigidBody.radius >= this.canvasHeight) {
+            if (rigidBody.position.y + rigidBody.radius >= this.canvasHeight) {
                 rigidBody.position.y = this.canvasHeight - rigidBody.radius;
                 rigidBody.velocity.y = -rigidBody.velocity.y * restitution;
             }
