@@ -12,8 +12,9 @@ export abstract class RigidBody {
         public readonly shape: Shape
     ) {}
 
-    public addAcceleration(acceleration: Vector): void {
-        this.acceleration = VectorMath.add(acceleration, this.acceleration);
+    public applyForce(force: Vector): void {
+        const producedAcceleration = VectorMath.divide(force, this.mass);
+        this.acceleration = VectorMath.add(this.acceleration, producedAcceleration);
     }
 
     public updatePosition(deltaTime: number): void {
@@ -34,6 +35,8 @@ export abstract class RigidBody {
             this.velocity, 
             VectorMath.multiply(averageAcceleration, deltaTime)
         );
+
+        this.acceleration = VectorMath.multiply(this.acceleration, 0);
     }
 
     abstract getRenderData(): BaseRenderData;
