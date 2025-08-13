@@ -16,5 +16,6 @@ export class Vector {
 
     public multiply(scalar: number) {
         this.x = this.x * scalar;
+        this.y = this.y * scalar;
     }
 }
