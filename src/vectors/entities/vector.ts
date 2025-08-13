@@ -13,4 +13,8 @@ export class Vector {
         this.x = this.x - vector.x;
         this.y = this.y - vector.y;
     }
+
+    public multiply(scalar: number) {
+        this.x = this.x * scalar;
+    }
 }
