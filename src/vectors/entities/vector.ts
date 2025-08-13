@@ -18,4 +18,9 @@ export class Vector {
         this.x = this.x * scalar;
         this.y = this.y * scalar;
     }
+
+    public divide(scalar: number) {
+        this.x = this.x / scalar;
+        this.y = this.y / scalar;
+    }
 }
