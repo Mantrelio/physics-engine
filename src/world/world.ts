@@ -128,7 +128,7 @@ export class World {
             if (object.velocity.x === 0 && object.velocity.y === 0) return;
                 
             if (object instanceof Circle) {
-                const dragDirectionalVector: Vector = VectorMath.multiply(VectorMath.normalize(object.velocity), -1);
+                const dragDirectionalVector: Vector = VectorMath.normalize(object.velocity).multiply(-1);
                 const dragForce: Vector = VectorMath.multiply(dragDirectionalVector, VectorMath.magnitude(object.velocity)*this.dragCoefficients[object.shape]*this.airDensity*0.5); 
                 object.applyForce(dragForce);
             }
