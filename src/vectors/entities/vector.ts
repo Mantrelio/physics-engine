@@ -8,4 +8,9 @@ export class Vector {
         this.x = this.x + vector.x;
         this.y = this.y + vector.y;
     }
+
+    public subtract(vector: Vector) {
+        this.x = this.x - vector.x;
+        this.y = this.y - vector.y;
+    }
 }
