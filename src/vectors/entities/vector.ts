@@ -27,4 +27,12 @@ export class Vector {
     public magnitude(): number {
         return Math.sqrt(this.x * this.x + this.y * this.y);
     }
+
+    public rotate(angleRadians: number): void {
+        const cos = Math.cos(angleRadians);
+        const sin = Math.sin(angleRadians);
+
+        this.x = this.x * cos - this.y * sin;
+        this.y = this.x * sin + this.y * cos;
+    }
 }
