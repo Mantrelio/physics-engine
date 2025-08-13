@@ -13,30 +13,16 @@ export abstract class RigidBody {
     ) {}
 
     public applyForce(force: Vector): void {
-        const producedAcceleration = VectorMath.divide(force, this.mass);
-        this.acceleration = VectorMath.add(this.acceleration, producedAcceleration);
+        const producedAcceleration: Vector = VectorMath.divide(force, this.mass);
+        this.acceleration.add(producedAcceleration);
     }
 
     public updatePosition(deltaTime: number): void {
-        const lastAcceleration: Vector = this.acceleration;    
+        this.position.add(VectorMath.multiply(this.velocity, deltaTime).multiply(100)).add(VectorMath.multiply(this.acceleration, deltaTime * deltaTime * 0.5).multiply(100));
 
-        this.position = VectorMath.add(
-            this.position, 
-            VectorMath.multiply(VectorMath.multiply(this.velocity, deltaTime), 100), 
-            VectorMath.multiply(VectorMath.multiply(this.acceleration, deltaTime * deltaTime * 0.5), 100)
-        );
+        this.velocity.add(VectorMath.multiply(this.acceleration, deltaTime));
 
-        const averageAcceleration: Vector = VectorMath.divide(
-            VectorMath.add(lastAcceleration, this.acceleration), 
-            2
-        );
-
-        this.velocity = VectorMath.add(
-            this.velocity, 
-            VectorMath.multiply(averageAcceleration, deltaTime)
-        );
-
-        this.acceleration = VectorMath.multiply(this.acceleration, 0);
+        this.acceleration.multiply(0);
     }
 
     abstract getRenderData(): BaseRenderData;
