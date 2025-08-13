@@ -35,4 +35,8 @@ export class Vector {
         this.x = this.x * cos - this.y * sin;
         this.y = this.x * sin + this.y * cos;
     }
+
+    public normalize(): void {
+        this.divide(this.magnitude());
+    }
 }
