@@ -22,7 +22,8 @@ export class CollisionDetection {
 
     private areColliding(object1: RigidBody, object2: RigidBody): boolean {
         if (object1 instanceof Circle && object2 instanceof Circle) {
-            if (VectorMath.magnitude(VectorMath.subtract(object1.position, object2.position)) <= object1.radius + object2.radius) {
+            const radii: number = object1.radius + object2.radius;
+            if (VectorMath.subtract(object1.position, object2.position).magnitude() <= radii) {
                 return true;
             }
 
@@ -39,20 +40,14 @@ export class CollisionDetection {
             const peneteration: number = radii - VectorMath.magnitude(distanceVector);
             const correctionDistanceVector: Vector = VectorMath.multiply(VectorMath.normalize(distanceVector), peneteration / 2);
 
-            object2.position = VectorMath.subtract(object2.position, correctionDistanceVector);
-            object1.position = VectorMath.add(object1.position, correctionDistanceVector);
+            object2.position.subtract(correctionDistanceVector);
+            object1.position.add(correctionDistanceVector);
 
             const v1 = VectorMath.dot(object1.velocity, VectorMath.normalize(distanceVector));
             const v2 = VectorMath.dot(object2.velocity, VectorMath.normalize(distanceVector));
 
-            object1.velocity = VectorMath.add(
-                object1.velocity,
-                VectorMath.multiply(VectorMath.normalize(distanceVector), v2 - v1)
-            );
-            object2.velocity = VectorMath.add(
-                object2.velocity,
-                VectorMath.multiply(VectorMath.normalize(distanceVector), v1 - v2)
-            );
+            object1.velocity.add(VectorMath.multiply(VectorMath.normalize(distanceVector), v2 - v1));
+            object2.velocity.add(VectorMath.multiply(VectorMath.normalize(distanceVector), v1 - v2));
         }
     }
 }
