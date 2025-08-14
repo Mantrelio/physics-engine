@@ -80,7 +80,7 @@ export class World {
     private updatePhysics(deltaTime: number) {
         this.objects.forEach(object => {
             this.applyGravity();
-            this.applyDrag();
+            this.applyDrag(object);
             object.updatePosition(deltaTime);
             this.applyConstraints(object);
         });
@@ -123,15 +123,13 @@ export class World {
         }
     }
 
-    private applyDrag(): void {
-        this.objects.forEach(object => {
-            if (object.velocity.x === 0 && object.velocity.y === 0) return;
-                
-            if (object instanceof Circle) {
-                const dragDirectionalVector: Vector = VectorMath.normalize(object.velocity).multiply(-1);
-                const dragForce: Vector = VectorMath.multiply(dragDirectionalVector, VectorMath.magnitude(object.velocity)*this.dragCoefficients[object.shape]*this.airDensity*0.5); 
-                object.applyForce(dragForce);
-            }
-        });
+    private applyDrag(object: RigidBody): void {
+        if (object.velocity.x === 0 && object.velocity.y === 0) return;
+            
+        if (object instanceof Circle) {
+            const dragDirectionalVector: Vector = VectorMath.normalize(object.velocity).multiply(-1);
+            const dragForce: Vector = VectorMath.multiply(dragDirectionalVector, VectorMath.magnitude(object.velocity)*this.dragCoefficients[object.shape]*this.airDensity*0.5); 
+            object.applyForce(dragForce);
+        }
     }
 }
