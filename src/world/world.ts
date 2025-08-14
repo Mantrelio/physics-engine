@@ -79,7 +79,7 @@ export class World {
 
     private updatePhysics(deltaTime: number) {
         this.objects.forEach(object => {
-            this.applyGravity();
+            this.applyGravity(object);
             this.applyDrag(object);
             object.updatePosition(deltaTime);
             this.applyConstraints(object);
@@ -90,11 +90,9 @@ export class World {
         this.objects.push(object);
     }
 
-    public applyGravity(): void {
-        this.objects.forEach(object => {
-            const gravityForce: Vector = new Vector(0, 9.8*object.mass); 
-            object.applyForce(gravityForce);
-        });
+    public applyGravity(object: RigidBody): void {
+        const gravityForce: Vector = new Vector(0, 9.8*object.mass); 
+        object.applyForce(gravityForce);
     }
 
     private applyConstraints(rigidBody: RigidBody): void {
