@@ -18,10 +18,9 @@ export abstract class RigidBody {
     }
 
     public updatePosition(deltaTime: number): void {
-        this.position.add(VectorMath.multiply(this.velocity, deltaTime).multiply(100)).add(VectorMath.multiply(this.acceleration, deltaTime * deltaTime * 0.5).multiply(100));
-
         this.velocity.add(VectorMath.multiply(this.acceleration, deltaTime));
-
+        this.position.add(VectorMath.multiply(this.velocity, deltaTime).multiply(100)).
+            add(VectorMath.multiply(this.acceleration, deltaTime * deltaTime * 0.5).multiply(100));
         this.acceleration.multiply(0);
     }
 
