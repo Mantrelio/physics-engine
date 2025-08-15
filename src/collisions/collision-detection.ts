@@ -23,7 +23,9 @@ export class CollisionDetection {
     private areColliding(object1: RigidBody, object2: RigidBody): boolean {
         if (object1 instanceof Circle && object2 instanceof Circle) {
             const radii: number = object1.radius + object2.radius;
-            if (VectorMath.subtract(object1.position, object2.position).magnitude() <= radii) {
+            const distanceBetweenObjects = VectorMath.subtract(object1.position, object2.position);
+
+            if (distanceBetweenObjects.magnitude() <= radii) {
                 return true;
             }
 
