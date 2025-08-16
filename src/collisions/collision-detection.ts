@@ -2,12 +2,22 @@ import { RigidBody } from "../rigid-bodies/abstracts/rigid-body.abstract";
 import { Circle } from "../rigid-bodies/circle";
 import { Vector } from "../vectors/entities/vector";
 import { VectorMath } from "../vectors/vector-math";
+import { QuadtreeNode } from "./data-structures/quadtree-node";
 
 export class CollisionDetection {
+    private rootQuadrantNode: QuadtreeNode;
+
     constructor(
         private readonly canvasWidth: number,
         private readonly canvasHeight: number
     ) {
+        this.rootQuadrantNode = new QuadtreeNode(new Vector(0, 0), this.canvasWidth, this.canvasHeight);
+    }
+
+    private createCollisionGrid(worldObjects: RigidBody[]) {
+        worldObjects.forEach(object => {
+            this.rootQuadrantNode.insert(object);
+        });
     }
 
     public checkForCollision(worldObjects: RigidBody[]) {
