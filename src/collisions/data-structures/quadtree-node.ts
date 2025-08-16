@@ -2,7 +2,7 @@ import { RigidBody } from "../../rigid-bodies/abstracts/rigid-body.abstract";
 import { Vector } from "../../vectors/entities/vector";
 
 export class QuadtreeNode {
-    private childNodes: QuadtreeNode[] = [];
+    public childNodes: QuadtreeNode[] = [];
     private objectThreshold: number = 4; 
     public pointData: RigidBody[] = [];
 
@@ -14,7 +14,7 @@ export class QuadtreeNode {
     ) {}
     
     public insert(rigidBody: RigidBody): void {
-        if (!this.isPointInQuadrant(rigidBody.Position)) {
+        if (!this.isPointInQuadrant(rigidBody.position)) {
             return;
         }
 
@@ -84,7 +84,7 @@ export class QuadtreeNode {
             pointPosition.y <= this.topLeftCornerPosition.y + this.height;
     }
 
-    private hasChildren(): boolean {
+    public hasChildren(): boolean {
         return this.childNodes.length > 0;
     }
 }
