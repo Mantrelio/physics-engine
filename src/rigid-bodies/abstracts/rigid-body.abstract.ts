@@ -1,3 +1,4 @@
+import { AABB } from "../../collisions/axis-aligned-bounding-box";
 import { BaseRenderData } from "../../renderer/interfaces/render-data.interface";
 import { Vector } from "../../vectors/entities/vector";
 import { VectorMath } from "../../vectors/vector-math";
@@ -25,4 +26,6 @@ export abstract class RigidBody {
     }
 
     abstract getRenderData(): BaseRenderData;
+
+    public abstract get aabb(): AABB;
 }

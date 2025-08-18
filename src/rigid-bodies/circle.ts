@@ -2,6 +2,7 @@ import { Vector } from "../vectors/entities/vector";
 import { RigidBody } from "./abstracts/rigid-body.abstract";
 import { Shape } from "./enums/shape.enum";
 import { CircleRenderData } from "../renderer/interfaces/render-data.interface";
+import { AABB } from "../collisions/axis-aligned-bounding-box";
 
 export class Circle extends RigidBody {
     public readonly color: string = this.generateRandomColor();
@@ -31,5 +32,9 @@ export class Circle extends RigidBody {
             radius: this.radius,
             color: this.color
         };
+    }
+
+    public get aabb(): AABB {
+        return new AABB(this.position, this.radius, this.radius);
     }
 }
