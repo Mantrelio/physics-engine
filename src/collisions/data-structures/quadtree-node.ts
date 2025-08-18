@@ -16,7 +16,7 @@ export class QuadtreeNode {
     public query(range: AABB): RigidBody[] {
         let foundPoints: RigidBody[] = [];
 
-        if (this.boundary.intersects(range)) return foundPoints;
+        if (!this.boundary.intersects(range)) return foundPoints;
         
         for (const point of this.points) {
             if (range.contains(point.position)) foundPoints.push(point);
