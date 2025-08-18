@@ -1,10 +1,10 @@
+import { RigidBody } from "../../rigid-bodies/abstracts/rigid-body.abstract";
 import { Vector } from "../../vectors/entities/vector";
 import { AABB } from "../axis-aligned-bounding-box";
-import { Point } from "./point.interface";
 
 export class QuadtreeNode {
     public childNodes: QuadtreeNode[] = [];
-    public points: Point[] = [];
+    public points: RigidBody[] = [];
 
     private objectThreshold: number = 4; 
     private isLeaf: boolean = true;
@@ -13,8 +13,8 @@ export class QuadtreeNode {
         private readonly boundary: AABB
     ) {}
 
-    public query(range: AABB): Point[] {
-        let foundPoints: Point[] = [];
+    public query(range: AABB): RigidBody[] {
+        let foundPoints: RigidBody[] = [];
 
         if (this.boundary.intersects(range)) return foundPoints;
         
@@ -31,7 +31,7 @@ export class QuadtreeNode {
         return foundPoints;
     }
     
-    public insert(point: Point): void {
+    public insert(point: RigidBody): void {
         if (!this.boundary.contains(point.position)) return;
         
         if (this.points.length < this.objectThreshold && this.isLeaf) {
@@ -61,14 +61,14 @@ export class QuadtreeNode {
                 halfHeight / 2
             )
         );
-        const bottomLeftQuad = new QuadtreeNode(
+        const bottomLeftQuad: QuadtreeNode = new QuadtreeNode(
             new AABB(
                 new Vector(position.x - halfWidth / 2, position.y + halfHeight / 2), 
                 halfWidth / 2, 
                 halfHeight / 2
             )
         );    
-        const bottomRightQuad = new QuadtreeNode(
+        const bottomRightQuad: QuadtreeNode = new QuadtreeNode(
             new AABB(
                 new Vector(position.x + halfWidth / 2, position.y + halfHeight / 2), 
                 halfWidth / 2, 
@@ -80,7 +80,7 @@ export class QuadtreeNode {
         this.isLeaf = false;
     }
 
-    private insertToChildren(point: Point) {
+    private insertToChildren(point: RigidBody): void {
         for (let i = 0; i < 4; i++) {
             this.childNodes[i].insert(point);
         }
