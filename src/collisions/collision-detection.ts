@@ -11,10 +11,10 @@ export class CollisionDetection {
         private readonly canvasWidth: number,
         private readonly canvasHeight: number
     ) {
-        this.rootQuadrantNode = new QuadtreeNode(new Vector(0, 0), this.canvasWidth, this.canvasHeight);
     }
 
     private createCollisionGrid(worldObjects: RigidBody[]) {
+        this.rootQuadrantNode = new QuadtreeNode(new Vector(0, 0), this.canvasWidth, this.canvasHeight);
         worldObjects.forEach(object => {
             this.rootQuadrantNode.insert(object);
         });
