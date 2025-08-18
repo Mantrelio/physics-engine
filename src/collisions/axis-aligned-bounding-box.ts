@@ -7,7 +7,7 @@ export class AABB {
         public readonly halfHeight: number
     ) {}
 
-    public containsPoint(pointPosition: Vector): boolean {
+    public contains(pointPosition: Vector): boolean {
         return (
             pointPosition.x >= this.position.x - this.halfWidth &&
             pointPosition.x <= this.position.x + this.halfWidth &&

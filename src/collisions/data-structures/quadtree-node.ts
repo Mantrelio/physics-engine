@@ -1,90 +1,88 @@
-import { RigidBody } from "../../rigid-bodies/abstracts/rigid-body.abstract";
 import { Vector } from "../../vectors/entities/vector";
+import { AABB } from "../axis-aligned-bounding-box";
+import { Point } from "./point.interface";
 
 export class QuadtreeNode {
     public childNodes: QuadtreeNode[] = [];
-    private objectThreshold: number = 4; 
-    public pointData: RigidBody[] = [];
+    public points: Point[] = [];
 
+    private objectThreshold: number = 4; 
+    private isLeaf: boolean = true;
 
     constructor(
-        private readonly topLeftCornerPosition: Vector,
-        private readonly width: number,
-        private readonly height: number
+        private readonly boundary: AABB
     ) {}
+
+    public query(range: AABB): Point[] {
+        let foundPoints: Point[] = [];
+
+        if (this.boundary.intersects(range)) return foundPoints;
+        
+        for (const point of this.points) {
+            if (range.contains(point.position)) foundPoints.push(point);
+        }
+
+        if (this.childNodes.length === 0) return foundPoints;
+
+        for (const childNode of this.childNodes) {
+            foundPoints.push(...childNode.query(range));
+        }
+
+        return foundPoints;
+    }
     
-    public insert(rigidBody: RigidBody): void {
-        if (!this.isPointInQuadrant(rigidBody.position)) {
+    public insert(point: Point): void {
+        if (!this.boundary.contains(point.position)) return;
+        
+        if (this.points.length < this.objectThreshold && this.isLeaf) {
+            this.points.push(point);
             return;
         }
 
-        if (this.hasChildren()) {
-            this.insertToChildren(rigidBody);
-            return;
-        }
-
-        this.pointData.push(rigidBody);
-
-        if (this.isObjectThresholdMet()) {
-            this.split();
-            this.redistributeDataToChildren();
-        }
+        if (this.isLeaf) this.subdivide();
+        
+        this.insertToChildren(point);
     }
 
-    private split(): void {
-        const topLeftQuad = new QuadtreeNode(
-            new Vector(this.topLeftCornerPosition.x, this.topLeftCornerPosition.y), 
-            this.width / 2, 
-            this.height / 2
-        );   
-        const topRightQuad = new QuadtreeNode(
-            new Vector(this.topLeftCornerPosition.x + this.width / 2, this.topLeftCornerPosition.y), 
-            this.width / 2, 
-            this.height / 2
-        );   
+    private subdivide(): void {
+        const { position, halfWidth, halfHeight } = this.boundary;
+
+        const topLeftQuad: QuadtreeNode = new QuadtreeNode(
+            new AABB(
+                new Vector(position.x - halfWidth / 2, position.y - halfHeight / 2), 
+                halfWidth / 2, 
+                halfHeight / 2
+            )
+        );
+        const topRightQuad: QuadtreeNode = new QuadtreeNode(
+           new AABB(
+                new Vector(position.x + halfWidth / 2, position.y - halfHeight / 2),
+                halfWidth / 2,
+                halfHeight / 2
+            )
+        );
         const bottomLeftQuad = new QuadtreeNode(
-            new Vector(this.topLeftCornerPosition.x, this.topLeftCornerPosition.y + this.height / 2), 
-            this.width / 2, 
-            this.height / 2
+            new AABB(
+                new Vector(position.x - halfWidth / 2, position.y + halfHeight / 2), 
+                halfWidth / 2, 
+                halfHeight / 2
+            )
         );    
         const bottomRightQuad = new QuadtreeNode(
-            new Vector(this.topLeftCornerPosition.x + this.width / 2, this.topLeftCornerPosition.y + this.height / 2), 
-            this.width / 2, 
-            this.height / 2
-        ); 
+            new AABB(
+                new Vector(position.x + halfWidth / 2, position.y + halfHeight / 2), 
+                halfWidth / 2, 
+                halfHeight / 2
+            )
+        );    
 
-        this.childNodes.push(topLeftQuad);
-        this.childNodes.push(topRightQuad);
-        this.childNodes.push(bottomLeftQuad);
-        this.childNodes.push(bottomRightQuad);
+        this.childNodes.push(topLeftQuad, topRightQuad, bottomLeftQuad, bottomRightQuad);
+        this.isLeaf = false;
     }
 
-    private isObjectThresholdMet(): boolean {
-        return this.pointData.length >= this.objectThreshold;
-    }
-
-    private redistributeDataToChildren(): void {
-        for(const point of this.pointData) {
-            this.insertToChildren(point);
-        }
-
-        this.pointData = [];
-    }
-
-    private insertToChildren(point: RigidBody) {
-        for(let i = 0; i < 4; i++) {
+    private insertToChildren(point: Point) {
+        for (let i = 0; i < 4; i++) {
             this.childNodes[i].insert(point);
         }
-    }
-
-    private isPointInQuadrant(pointPosition: Vector): boolean {
-        return pointPosition.x >= this.topLeftCornerPosition.x && 
-            pointPosition.x <= this.topLeftCornerPosition.x + this.width &&
-            pointPosition.y >= this.topLeftCornerPosition.y &&
-            pointPosition.y <= this.topLeftCornerPosition.y + this.height;
-    }
-
-    public hasChildren(): boolean {
-        return this.childNodes.length > 0;
     }
 }

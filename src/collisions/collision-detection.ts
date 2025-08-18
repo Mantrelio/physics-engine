@@ -2,6 +2,7 @@ import { RigidBody } from "../rigid-bodies/abstracts/rigid-body.abstract";
 import { Circle } from "../rigid-bodies/circle";
 import { Vector } from "../vectors/entities/vector";
 import { VectorMath } from "../vectors/vector-math";
+import { AABB } from "./axis-aligned-bounding-box";
 import { QuadtreeNode } from "./data-structures/quadtree-node";
 
 export class CollisionDetection {
@@ -14,15 +15,22 @@ export class CollisionDetection {
     }
 
     private createCollisionGrid(worldObjects: RigidBody[]) {
-        this.rootQuadrantNode = new QuadtreeNode(new Vector(0, 0), this.canvasWidth, this.canvasHeight);
+        this.rootQuadrantNode = new QuadtreeNode(
+            new AABB(
+                new Vector(this.canvasWidth / 2, this.canvasHeight / 2),
+                this.canvasWidth / 2,
+                this.canvasHeight / 2
+            )
+        );
+
         worldObjects.forEach(object => {
             this.rootQuadrantNode.insert(object);
         });
     }
 
     public checkForCollision(worldObjects: RigidBody[]) {
-        for(let i = 0; i < worldObjects.length; i++) {
-            for(let j = i + 1; j < worldObjects.length; j++) {
+        for (let i = 0; i < worldObjects.length; i++) {
+            for (let j = i + 1; j < worldObjects.length; j++) {
                 if (this.areColliding(worldObjects[i], worldObjects[j])) {
                     this.resolveCollision(worldObjects[i], worldObjects[j]);
                 }
