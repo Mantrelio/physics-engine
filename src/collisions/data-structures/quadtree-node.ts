@@ -10,7 +10,7 @@ export class QuadtreeNode {
     private isLeaf: boolean = true;
 
     constructor(
-        private readonly boundary: AABB
+        public readonly boundary: AABB
     ) {}
 
     public query(range: AABB): RigidBody[] {
@@ -40,7 +40,7 @@ export class QuadtreeNode {
         }
 
         if (this.isLeaf) this.subdivide();
-        
+
         this.insertToChildren(point);
     }
 

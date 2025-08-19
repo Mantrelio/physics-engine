@@ -18,6 +18,7 @@ export class World {
     private readonly physicsStepsLimit: number = 4;
 
     private visibleAABB: boolean = true;
+    private visibleCollisionGrid: boolean = true;
 
     private readonly dragCoefficients: Record<Shape, number> = {
         'circle': 0.47
@@ -76,7 +77,7 @@ export class World {
 
         if (physicsStepsCount >= this.physicsStepsLimit) this.accumulator = 0;
 
-        this.renderer.render(this.objects, { visibleAABB: this.visibleAABB });
+        this.renderer.render(this.objects, this.collisionDetection.rootQuadrantNode, { visibleAABB: this.visibleAABB, visibleCollisionGrid: this.visibleCollisionGrid });
     }
 
     private updatePhysics(deltaTime: number) {

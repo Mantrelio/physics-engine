@@ -1,3 +1,4 @@
+import { QuadtreeNode } from "../../collisions/data-structures/quadtree-node";
 import { AABBRenderData } from "../interfaces/render-data.interface";
 
 export class GizmoDrawer {
@@ -12,5 +13,19 @@ export class GizmoDrawer {
             data.halfHeight * 2
         );
         ctx.restore();
+    }
+
+    static drawCollisionGrid(ctx: CanvasRenderingContext2D, quadtreeNode: QuadtreeNode): void {
+        GizmoDrawer.drawAABB(ctx, {
+            x: quadtreeNode.boundary.position.x,
+            y: quadtreeNode.boundary.position.y,
+            halfWidth: quadtreeNode.boundary.halfWidth,
+            halfHeight: quadtreeNode.boundary.halfHeight,
+            color: 'rgba(0, 0, 0, 1)'
+        });
+
+        for (const child of quadtreeNode.childNodes) {
+            GizmoDrawer.drawCollisionGrid(ctx, child);
+        }
     }
 }

@@ -1,3 +1,4 @@
 export type WorldOptions = {
-    visibleAABB: boolean;
+    visibleAABB?: boolean;
+    visibleCollisionGrid?: boolean;
 }
