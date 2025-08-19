@@ -16,4 +16,5 @@ export interface AABBRenderData {
     y: number;
     halfWidth: number;
     halfHeight: number;
+    color?: string;
 }
