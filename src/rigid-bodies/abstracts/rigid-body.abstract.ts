@@ -1,5 +1,5 @@
 import { AABB } from "../../collisions/axis-aligned-bounding-box";
-import { BaseRenderData } from "../../renderer/interfaces/render-data.interface";
+import { AABBRenderData, BaseShapeRenderData } from "../../renderer/interfaces/render-data.interface";
 import { Vector } from "../../vectors/entities/vector";
 import { VectorMath } from "../../vectors/vector-math";
 import { Shape } from "../enums/shape.enum";
@@ -25,7 +25,18 @@ export abstract class RigidBody {
         this.acceleration.multiply(0);
     }
 
-    abstract getRenderData(): BaseRenderData;
+    abstract getRenderData(): BaseShapeRenderData;
 
     public abstract get aabb(): AABB;
+
+    public getAABBRenderData(): AABBRenderData {
+        const aabb = this.aabb;
+
+        return {
+            x: aabb.position.x,
+            y: aabb.position.y,
+            halfWidth: aabb.halfWidth,
+            halfHeight: aabb.halfHeight
+        };
+    }
 }

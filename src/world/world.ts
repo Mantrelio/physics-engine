@@ -17,6 +17,8 @@ export class World {
     private accumulator: number = 0;
     private readonly physicsStepsLimit: number = 4;
 
+    private visibleAABB: boolean = true;
+
     private readonly dragCoefficients: Record<Shape, number> = {
         'circle': 0.47
     }
@@ -64,7 +66,7 @@ export class World {
 
         let physicsStepsCount: number = 0;
 
-        while(this.accumulator >= this.fixedTimeStep && physicsStepsCount < this.physicsStepsLimit) {
+        while (this.accumulator >= this.fixedTimeStep && physicsStepsCount < this.physicsStepsLimit) {
             this.updatePhysics(this.fixedTimeStep);
             this.collisionDetection.checkForCollision(this.objects);
 
@@ -74,7 +76,7 @@ export class World {
 
         if (physicsStepsCount >= this.physicsStepsLimit) this.accumulator = 0;
 
-        this.renderer.render(this.objects);
+        this.renderer.render(this.objects, { visibleAABB: this.visibleAABB });
     }
 
     private updatePhysics(deltaTime: number) {
