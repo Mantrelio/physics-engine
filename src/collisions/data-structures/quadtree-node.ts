@@ -19,10 +19,10 @@ export class QuadtreeNode {
         if (!this.boundary.intersects(range)) return foundPoints;
         
         for (const point of this.points) {
-            if (range.contains(point.position)) foundPoints.push(point);
+            if (range.intersects(point.aabb)) foundPoints.push(point);
         }
 
-        if (this.childNodes.length === 0) return foundPoints;
+        if (this.isLeaf) return foundPoints;
 
         for (const childNode of this.childNodes) {
             foundPoints.push(...childNode.query(range));
