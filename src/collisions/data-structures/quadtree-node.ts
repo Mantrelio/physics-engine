@@ -78,6 +78,12 @@ export class QuadtreeNode {
 
         this.childNodes.push(topLeftQuad, topRightQuad, bottomLeftQuad, bottomRightQuad);
         this.isLeaf = false;
+        
+        for (const point of this.points) {
+            this.insertToChildren(point);
+        }
+
+        this.points = [];
     }
 
     private insertToChildren(point: RigidBody): void {
