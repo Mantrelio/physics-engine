@@ -6,7 +6,7 @@ import { AABB } from "./axis-aligned-bounding-box";
 import { QuadtreeNode } from "./data-structures/quadtree-node";
 
 export class CollisionDetection {
-    private rootQuadrantNode: QuadtreeNode;
+    public rootQuadrantNode: QuadtreeNode;
 
     constructor(
         private readonly canvasWidth: number,
@@ -29,10 +29,15 @@ export class CollisionDetection {
     }
 
     public checkForCollision(worldObjects: RigidBody[]) {
-        for (let i = 0; i < worldObjects.length; i++) {
-            for (let j = i + 1; j < worldObjects.length; j++) {
-                if (this.areColliding(worldObjects[i], worldObjects[j])) {
-                    this.resolveCollision(worldObjects[i], worldObjects[j]);
+        this.createCollisionGrid(worldObjects);
+
+        for (const object of worldObjects) {
+            const potentialColliders: RigidBody[] = this.rootQuadrantNode.query(object.aabb);
+            console.log(potentialColliders);
+
+            for (const collider of potentialColliders) {
+                if (collider !== object && this.areColliding(object, collider)) {
+                    this.resolveCollision(object, collider);
                 }
             }
         }
