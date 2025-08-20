@@ -33,7 +33,6 @@ export class CollisionDetection {
 
         for (const object of worldObjects) {
             const potentialColliders: RigidBody[] = this.rootQuadrantNode.query(object.aabb);
-            console.log(potentialColliders);
 
             for (const collider of potentialColliders) {
                 if (collider !== object && this.areColliding(object, collider)) {
