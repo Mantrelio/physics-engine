@@ -17,8 +17,8 @@ export class World {
     private accumulator: number = 0;
     private readonly physicsStepsLimit: number = 4;
 
-    private visibleAABB: boolean = true;
-    private visibleCollisionGrid: boolean = true;
+    private visibleAABB: boolean = false;
+    private visibleCollisionGrid: boolean = false;
 
     private readonly dragCoefficients: Record<Shape, number> = {
         'circle': 0.47
@@ -28,11 +28,11 @@ export class World {
         private readonly airDensity: number,
         canvasId: string,
     ) {
-        const canvas = document.getElementById(canvasId) as HTMLCanvasElement;
+        const canvas: HTMLCanvasElement = document.getElementById(canvasId) as HTMLCanvasElement;
         if (!canvas) throw new Error(`Canvas with id '${canvasId}' not found`);
         
 
-        const ctx = canvas.getContext('2d');
+        const ctx: CanvasRenderingContext2D | null = canvas.getContext('2d');
         if (!ctx) throw new Error('Could not get 2D context from canvas');
         
         this.renderer = new CanvasRenderer(ctx);
@@ -44,12 +44,12 @@ export class World {
     }
 
     public run(): void {
-        let lastFrameTime = 0;
+        let lastFrameTime: number = 0;
         
         const simulationLoop = (currentTime: number) => {
             if (lastFrameTime === 0) lastFrameTime = currentTime;
 
-            const deltaTime = (currentTime - lastFrameTime) / 1000;
+            const deltaTime: number = (currentTime - lastFrameTime) / 1000;
             lastFrameTime = currentTime;
 
             if(deltaTime > 0) this.fixedTimeStepUpdate(deltaTime);
@@ -61,7 +61,7 @@ export class World {
     }
 
     private fixedTimeStepUpdate(deltaTime: number) {
-        const cappedDeltaTime = Math.min(deltaTime, 0.25);
+        const cappedDeltaTime: number = Math.min(deltaTime, 0.25);
 
         this.accumulator += cappedDeltaTime;
 
