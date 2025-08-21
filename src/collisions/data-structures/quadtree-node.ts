@@ -6,13 +6,15 @@ export class QuadtreeNode {
     public childNodes: QuadtreeNode[] = [];
     public points: RigidBody[] = [];
 
-    private objectThreshold: number = 4; 
+    private objectThreshold: number = 8;
+    private depthThreshold: number = 10; 
     private isLeaf: boolean = true;
 
-    private readonly looseFactor: number = 1.5;
+    private readonly looseFactor: number = 1.1
 
     constructor(
-        public readonly boundary: AABB
+        public readonly boundary: AABB,
+        private depth: number = 0
     ) {}
 
     public query(range: AABB): RigidBody[] {
@@ -35,6 +37,11 @@ export class QuadtreeNode {
     
     public insert(point: RigidBody): void {
         if (!this.boundary.contains(point.position)) return;
+
+        if (this.depth === this.depthThreshold) {
+            this.points.push(point);
+            return;
+        }
         
         if (this.points.length < this.objectThreshold && this.isLeaf) {
             this.points.push(point);
@@ -53,29 +60,33 @@ export class QuadtreeNode {
             new AABB(
                 new Vector(position.x - halfWidth / 2 * this.looseFactor, position.y - halfHeight / 2 * this.looseFactor), 
                 halfWidth / 2 * this.looseFactor, 
-                halfHeight / 2 * this.looseFactor
-            )
+                halfHeight / 2 * this.looseFactor,
+            ),
+            this.depth + 1
         );
         const topRightQuad: QuadtreeNode = new QuadtreeNode(
            new AABB(
                 new Vector(position.x + halfWidth / 2 * this.looseFactor, position.y - halfHeight / 2 * this.looseFactor),
                 halfWidth / 2 * this.looseFactor,
                 halfHeight / 2 * this.looseFactor
-            )
+            ),
+            this.depth + 1
         );
         const bottomLeftQuad: QuadtreeNode = new QuadtreeNode(
             new AABB(
                 new Vector(position.x - halfWidth / 2 * this.looseFactor, position.y + halfHeight / 2 * this.looseFactor), 
                 halfWidth / 2 * this.looseFactor, 
                 halfHeight / 2 * this.looseFactor
-            )
+            ),
+            this.depth + 1
         );    
         const bottomRightQuad: QuadtreeNode = new QuadtreeNode(
             new AABB(
                 new Vector(position.x + halfWidth / 2 * this.looseFactor, position.y + halfHeight / 2 * this.looseFactor), 
                 halfWidth / 2 * this.looseFactor, 
                 halfHeight / 2 * this.looseFactor
-            )
+            ),
+            this.depth + 1
         );    
 
         this.childNodes.push(topLeftQuad, topRightQuad, bottomLeftQuad, bottomRightQuad);
