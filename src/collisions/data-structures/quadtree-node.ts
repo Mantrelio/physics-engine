@@ -9,6 +9,8 @@ export class QuadtreeNode {
     private objectThreshold: number = 4; 
     private isLeaf: boolean = true;
 
+    private readonly looseFactor: number = 1.5;
+
     constructor(
         public readonly boundary: AABB
     ) {}
@@ -49,30 +51,30 @@ export class QuadtreeNode {
 
         const topLeftQuad: QuadtreeNode = new QuadtreeNode(
             new AABB(
-                new Vector(position.x - halfWidth / 2, position.y - halfHeight / 2), 
-                halfWidth / 2, 
-                halfHeight / 2
+                new Vector(position.x - halfWidth / 2 * this.looseFactor, position.y - halfHeight / 2 * this.looseFactor), 
+                halfWidth / 2 * this.looseFactor, 
+                halfHeight / 2 * this.looseFactor
             )
         );
         const topRightQuad: QuadtreeNode = new QuadtreeNode(
            new AABB(
-                new Vector(position.x + halfWidth / 2, position.y - halfHeight / 2),
-                halfWidth / 2,
-                halfHeight / 2
+                new Vector(position.x + halfWidth / 2 * this.looseFactor, position.y - halfHeight / 2 * this.looseFactor),
+                halfWidth / 2 * this.looseFactor,
+                halfHeight / 2 * this.looseFactor
             )
         );
         const bottomLeftQuad: QuadtreeNode = new QuadtreeNode(
             new AABB(
-                new Vector(position.x - halfWidth / 2, position.y + halfHeight / 2), 
-                halfWidth / 2, 
-                halfHeight / 2
+                new Vector(position.x - halfWidth / 2 * this.looseFactor, position.y + halfHeight / 2 * this.looseFactor), 
+                halfWidth / 2 * this.looseFactor, 
+                halfHeight / 2 * this.looseFactor
             )
         );    
         const bottomRightQuad: QuadtreeNode = new QuadtreeNode(
             new AABB(
-                new Vector(position.x + halfWidth / 2, position.y + halfHeight / 2), 
-                halfWidth / 2, 
-                halfHeight / 2
+                new Vector(position.x + halfWidth / 2 * this.looseFactor, position.y + halfHeight / 2 * this.looseFactor), 
+                halfWidth / 2 * this.looseFactor, 
+                halfHeight / 2 * this.looseFactor
             )
         );    
 
