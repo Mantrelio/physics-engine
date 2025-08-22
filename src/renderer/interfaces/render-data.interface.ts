@@ -1,14 +1,20 @@
 import { Shape } from "../../rigid-bodies/enums/shape.enum"
+import { Vector } from "../../vectors/entities/vector";
 
 export interface BaseShapeRenderData {
     type: Shape;
     x: number;
     y: number;
-    color: string;
+    color?: string;
 }
 
 export interface CircleRenderData extends BaseShapeRenderData {
     radius: number;
+}
+
+export interface PolygonRenderData extends BaseShapeRenderData {
+    size: number;
+    vertices: Vector[];
 }
 
 export interface AABBRenderData {
