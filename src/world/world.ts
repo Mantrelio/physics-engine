@@ -17,11 +17,12 @@ export class World {
     private accumulator: number = 0;
     private readonly physicsStepsLimit: number = 4;
 
-    private visibleAABB: boolean = false;
+    private visibleAABB: boolean = true;
     private visibleCollisionGrid: boolean = false;
 
     private readonly dragCoefficients: Record<Shape, number> = {
-        'circle': 0.47
+        'circle': 0.47,
+        'polygon': 0.5
     }
 
     constructor(
@@ -82,7 +83,7 @@ export class World {
 
     private updatePhysics(deltaTime: number) {
         this.objects.forEach(object => {
-            this.applyGravity(object);
+            //this.applyGravity(object);
             this.applyDrag(object);
             object.updatePosition(deltaTime);
             this.applyConstraints(object);
