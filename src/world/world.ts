@@ -129,8 +129,8 @@ export class World {
 
     private updatePhysics(deltaTime: number) {
         this.objects.forEach(object => {
-            //this.applyGravity(object);
-            //this.applyDrag(object);
+            this.applyGravity(object);
+            this.applyDrag(object);
             object.updatePosition(deltaTime);
             this.applyConstraints(object);
         });

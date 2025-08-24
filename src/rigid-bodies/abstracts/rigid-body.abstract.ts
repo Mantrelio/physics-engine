@@ -25,7 +25,7 @@ export abstract class RigidBody {
         this.acceleration.multiply(0);
     }
 
-    abstract getRenderData(): BaseShapeRenderData;
+    public abstract getRenderData(): BaseShapeRenderData;
 
     public abstract get aabb(): AABB;
 
