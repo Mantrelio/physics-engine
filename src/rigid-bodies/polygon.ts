@@ -20,7 +20,7 @@ export class Polygon extends RigidBody {
         super(position, velocity, mass, acceleration, Shape.POLYGON);
 
         for (let i = 0; i < sideCount; i++) {
-            const angle = (2 * Math.PI * i) / sideCount - Math.PI / 2;
+            const angle: number = (2 * Math.PI * i) / sideCount - Math.PI / 2;
 
             this.vertices.push(new Vector(
                 size * Math.cos(angle),
@@ -35,22 +35,22 @@ export class Polygon extends RigidBody {
             x: this.position.x,
             y: this.position.y,
             size: this.size,
-            vertices: this.vertices.map(vertice => 
-                VectorMath.add(vertice, this.position)
+            vertices: this.vertices.map(vertex => 
+                VectorMath.add(vertex, this.position)
             )
-        }
+        };
     }
 
     public get worldVertices(): Vector[] {
-        const worldVertices: Vector[] = this.vertices.map(vertice => {
-            return VectorMath.add(vertice, this.position)
+        const worldVertices: Vector[] = this.vertices.map(vertex => {
+            return VectorMath.add(vertex, this.position)
         });
 
         return worldVertices;
     }
 
     public get boundingBox(): BoundingBox {
-        const worldVertices = this.worldVertices;
+        const worldVertices: Vector[] = this.worldVertices;
 
         let minX: number = worldVertices[0].x;
         let maxX: number = worldVertices[0].x;
@@ -58,14 +58,14 @@ export class Polygon extends RigidBody {
         let minY: number = worldVertices[0].y;
         let maxY: number = worldVertices[0].y;
 
-        for (const vertice of worldVertices) {
-            if (vertice.x < minX) minX = vertice.x;
-            if (vertice.x > maxX) maxX = vertice.x;
-            if (vertice.y < minY) minY = vertice.y;
-            if (vertice.y > maxY) maxY = vertice.y;
+        for (const vertex of worldVertices) {
+            if (vertex.x < minX) minX = vertex.x;
+            if (vertex.x > maxX) maxX = vertex.x;
+            if (vertex.y < minY) minY = vertex.y;
+            if (vertex.y > maxY) maxY = vertex.y;
         }
 
-        return { minX, maxX, minY, maxY }
+        return { minX, maxX, minY, maxY };
     }
 
     public get aabb(): AABB {
@@ -74,7 +74,7 @@ export class Polygon extends RigidBody {
         const halfWidth: number = (maxX - minX) / 2;
         const halfHeight: number = (maxY - minY) / 2; 
 
-        const center: Vector = new Vector(minX + halfWidth, minY + halfHeight)
+        const center: Vector = new Vector(minX + halfWidth, minY + halfHeight);
 
         return new AABB(center, halfWidth, halfHeight);
     }
