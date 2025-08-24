@@ -4,6 +4,7 @@ import { Vector } from "../vectors/entities/vector";
 import { VectorMath } from "../vectors/vector-math";
 import { RigidBody } from "./abstracts/rigid-body.abstract";
 import { Shape } from "./enums/shape.enum";
+import { BoundingBox } from "./types/bounding-box.type";
 
 export class Polygon extends RigidBody {
     public vertices: Vector[] = [];
@@ -48,7 +49,7 @@ export class Polygon extends RigidBody {
         return worldVertices;
     }
 
-    public get aabb(): AABB {
+    public get boundingBox(): BoundingBox {
         const worldVertices = this.worldVertices;
 
         let minX: number = worldVertices[0].x;
@@ -63,6 +64,12 @@ export class Polygon extends RigidBody {
             if (vertice.y < minY) minY = vertice.y;
             if (vertice.y > maxY) maxY = vertice.y;
         }
+
+        return { minX, maxX, minY, maxY }
+    }
+
+    public get aabb(): AABB {
+        const { minX, maxX, minY, maxY } = this.boundingBox;
 
         const halfWidth: number = (maxX - minX) / 2;
         const halfHeight: number = (maxY - minY) / 2; 
