@@ -3,6 +3,7 @@ import { CanvasRenderer } from "../renderer/canvas-renderer";
 import { RigidBody } from "../rigid-bodies/abstracts/rigid-body.abstract";
 import { Circle } from "../rigid-bodies/circle";
 import { Shape } from "../rigid-bodies/enums/shape.enum";
+import { Polygon } from "../rigid-bodies/polygon";
 import { Vector } from "../vectors/entities/vector";
 import { VectorMath } from "../vectors/vector-math";
 
@@ -23,7 +24,7 @@ export class World {
     private readonly constraintHandlers: Record<Shape, (rigidBody: RigidBody) => void> = {
         [Shape.CIRCLE]: (rigidBody: RigidBody) => {
             const restitution: number = 0.8;
-            const circle = rigidBody as Circle;
+            const circle: Circle = rigidBody as Circle;
 
             if (circle.position.x - circle.radius <= 0) {
                 circle.position.x = circle.radius;
@@ -42,7 +43,27 @@ export class World {
             }
         },
 
-        [Shape.POLYGON]: (rigidBody: RigidBody) => undefined
+        [Shape.POLYGON]: (rigidBody: RigidBody) => {
+            const restitution: number = 0.8;
+            const polygon: Polygon = rigidBody as Polygon;
+            const { maxX, minX, maxY, minY } = polygon.boundingBox;
+
+            if (minX < 0) {
+                polygon.position.x += -minX;
+                polygon.velocity.x = -polygon.velocity.x * restitution;
+            } else if (maxX > this.canvasWidth) {
+                polygon.position.x -= (maxX - this.canvasWidth);
+                polygon.velocity.x = -polygon.velocity.x * restitution;
+            }
+
+            if (minY < 0) {
+                polygon.position.y += -minY;
+                polygon.velocity.y = -polygon.velocity.y * restitution;
+            } else if (maxY > this.canvasHeight) {
+                polygon.position.y -= (maxY - this.canvasHeight);
+                polygon.velocity.y = -polygon.velocity.y * restitution;
+            } 
+        }
     }
 
     private readonly dragCoefficients: Record<Shape, number> = {
@@ -109,7 +130,7 @@ export class World {
     private updatePhysics(deltaTime: number) {
         this.objects.forEach(object => {
             //this.applyGravity(object);
-            this.applyDrag(object);
+            //this.applyDrag(object);
             object.updatePosition(deltaTime);
             this.applyConstraints(object);
         });
