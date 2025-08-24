@@ -40,10 +40,16 @@ export class Polygon extends RigidBody {
         }
     }
 
+    public get worldVertices(): Vector[] {
+        const worldVertices: Vector[] = this.vertices.map(vertice => {
+            return VectorMath.add(vertice, this.position)
+        });
+
+        return worldVertices;
+    }
+
     public get aabb(): AABB {
-        const worldVertices: Vector[] = this.vertices.map(vertice => 
-            VectorMath.add(vertice, this.position)
-        );
+        const worldVertices = this.worldVertices;
 
         let minX: number = worldVertices[0].x;
         let maxX: number = worldVertices[0].x;
