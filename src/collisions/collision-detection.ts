@@ -1,5 +1,6 @@
 import { RigidBody } from "../rigid-bodies/abstracts/rigid-body.abstract";
 import { Circle } from "../rigid-bodies/circle";
+import { Polygon } from "../rigid-bodies/polygon";
 import { Vector } from "../vectors/entities/vector";
 import { VectorMath } from "../vectors/vector-math";
 import { AABB } from "./axis-aligned-bounding-box";
@@ -56,6 +57,23 @@ export class CollisionDetection {
         
         return false;
     } 
+
+    private getPolygonAxes(polygon: Polygon): Vector[] {
+        const axes: Vector[] = [];
+        const vertices = polygon.worldVertices;
+
+        for (let i = 0; i < vertices.length; i++) {
+            const vertexA: Vector = vertices[i];
+            const vertexB: Vector = vertices[(i + 1) % vertices.length];
+
+            const side: Vector =  VectorMath.subtract(vertexA, vertexB);
+
+            const sideNormal = new Vector(-side.y, side.x);
+            axes.push(VectorMath.normalize(sideNormal));
+        }
+
+        return axes;
+    }
     
     private resolveCollision(object1: RigidBody, object2: RigidBody): void {
         if (object1 instanceof Circle && object2 instanceof Circle) {
