@@ -18,7 +18,32 @@ export class World {
     private readonly physicsStepsLimit: number = 4;
 
     private visibleAABB: boolean = true;
-    private visibleCollisionGrid: boolean = false;
+    private visibleCollisionGrid: boolean = true;
+
+    private readonly constraintHandlers: Record<Shape, (rigidBody: RigidBody) => void> = {
+        [Shape.CIRCLE]: (rigidBody: RigidBody) => {
+            const restitution: number = 0.8;
+            const circle = rigidBody as Circle;
+
+            if (circle.position.x - circle.radius <= 0) {
+                circle.position.x = circle.radius;
+                circle.velocity.x = -circle.velocity.x * restitution;
+            } else if (circle.position.x + circle.radius >= this.canvasWidth) {
+                circle.position.x = this.canvasWidth - circle.radius;
+                circle.velocity.x = -circle.velocity.x * restitution;
+            }
+
+            if (circle.position.y - circle.radius <= 0) {
+                circle.position.y = circle.radius;
+                rigidBody.velocity.y = -circle.velocity.y * restitution;
+            } else if (circle.position.y + circle.radius >= this.canvasHeight) {
+                circle.position.y = this.canvasHeight - circle.radius;
+                circle.velocity.y = -circle.velocity.y * restitution;
+            }
+        },
+
+        [Shape.POLYGON]: (rigidBody: RigidBody) => undefined
+    }
 
     private readonly dragCoefficients: Record<Shape, number> = {
         'circle': 0.47,
@@ -100,29 +125,7 @@ export class World {
     }
 
     private applyConstraints(rigidBody: RigidBody): void {
-        const restitution = 0.8;
-
-        if (rigidBody instanceof Circle) {
-            if (rigidBody.position.x - rigidBody.radius <= 0) {
-                rigidBody.position.x = rigidBody.radius;
-                rigidBody.velocity.x = -rigidBody.velocity.x * restitution;
-            }
-
-            if (rigidBody.position.x + rigidBody.radius >= this.canvasWidth) {
-                rigidBody.position.x = this.canvasWidth - rigidBody.radius;
-                rigidBody.velocity.x = -rigidBody.velocity.x * restitution;
-            }
-
-            if (rigidBody.position.y - rigidBody.radius <= 0) {
-                rigidBody.position.y = rigidBody.radius;
-                rigidBody.velocity.y = -rigidBody.velocity.y * restitution;
-            }
-
-            if (rigidBody.position.y + rigidBody.radius >= this.canvasHeight) {
-                rigidBody.position.y = this.canvasHeight - rigidBody.radius;
-                rigidBody.velocity.y = -rigidBody.velocity.y * restitution;
-            }
-        }
+        this.constraintHandlers[rigidBody.shape](rigidBody);
     }
 
     private applyDrag(object: RigidBody): void {
