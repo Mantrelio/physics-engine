@@ -76,6 +76,24 @@ export class CollisionDetection {
 
         return true;
     }
+
+    private isPolygonPolygonCollision(polygonA: Polygon, polygonB: Polygon) {
+        const axes: Vector[] = [];
+
+        axes.push(...this.getPolygonAxes(polygonA));
+        axes.push(...this.getPolygonAxes(polygonB));
+
+        for (const axis of axes) {
+            const polygonALimits: Interval = this.projectPolygonOnAxis(polygonA, axis);
+            const polygonBLimits: Interval = this.projectPolygonOnAxis(polygonB, axis);
+
+            if (polygonALimits.max < polygonBLimits.min || polygonALimits.min > polygonBLimits.max) {
+                return false;
+            }
+        }
+
+        return true;
+    }
     
     private isCircleCircleCollision(circleA: Circle, circleB: Circle): boolean {
         const radii: number = circleA.radius + circleB.radius;
