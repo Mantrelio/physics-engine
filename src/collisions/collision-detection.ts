@@ -57,6 +57,18 @@ export class CollisionDetection {
         
         return false;
     }
+
+    private isCirclePolygonCollision(circle: Circle, polygon: Polygon) {
+        const axes: Vector[] = [];
+
+        axes.push(...this.getPolygonAxes(polygon));
+        axes.push(this.getCirclePolygonAxis(circle, polygon));
+
+        for (const axis of axes) {
+
+        }
+
+    }
     
     private isCircleCircleCollision(circleA: Circle, circleB: Circle): boolean {
         const radii: number = circleA.radius + circleB.radius;
@@ -121,7 +133,7 @@ export class CollisionDetection {
         return closestVertex;
     }
 
-    private projectCirclePolygonOnAxis(circle: Circle, axis: Vector): { max: number, min: number } {
+    private projectCircleOnAxis(circle: Circle, axis: Vector): { max: number, min: number } {
         const centerProjection = VectorMath.dot(circle.position, axis);
 
         return {
