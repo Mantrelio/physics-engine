@@ -15,7 +15,7 @@ export class CollisionDetection {
         private readonly canvasHeight: number
     ) {
     }
-
+    //TODO: maybe implement simultaneous collision detection
     private createCollisionGrid(worldObjects: RigidBody[]) {
         this.rootQuadrantNode = new QuadtreeNode(
             new AABB(
@@ -43,19 +43,13 @@ export class CollisionDetection {
             }
         }
     }
+    //TODO: look in to visitor design pattern and implement
+    private areColliding(objectB: RigidBody, objectA: RigidBody): boolean {
+        if (objectA instanceof Circle && objectB instanceof Polygon) return this.isCirclePolygonCollision(objectA, objectB);
+        if (objectA instanceof Polygon && objectB instanceof Circle) return this.isCirclePolygonCollision(objectB, objectA);
+        if (objectA instanceof Circle && objectB instanceof Circle) return this.isCircleCircleCollision(objectA, objectB);
+        if (objectA instanceof Polygon && objectB instanceof Polygon) return this.isPolygonPolygonCollision(objectA, objectB);
 
-    private areColliding(object1: RigidBody, object2: RigidBody): boolean {
-        if (object1 instanceof Circle && object2 instanceof Circle) {
-            const radii: number = object1.radius + object2.radius;
-            const distanceBetweenObjects = VectorMath.subtract(object1.position, object2.position);
-
-            if (distanceBetweenObjects.magnitude() <= radii) {
-                return true;
-            }
-
-            return false;
-        }
-        
         return false;
     }
 
