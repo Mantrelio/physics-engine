@@ -56,7 +56,18 @@ export class CollisionDetection {
         }
         
         return false;
-    } 
+    }
+    
+    private isCircleCircleCollision(circleA: Circle, circleB: Circle): boolean {
+        const radii: number = circleA.radius + circleB.radius;
+        const distanceBetweenObjects = VectorMath.subtract(circleA.position, circleB.position);
+
+        if (distanceBetweenObjects.magnitude() <= radii) {
+            return true;
+        }
+
+        return false;
+    }
 
     private getPolygonAxes(polygon: Polygon): Vector[] {
         const axes: Vector[] = [];
