@@ -74,6 +74,23 @@ export class CollisionDetection {
 
         return axes;
     }
+
+    private projectPolygonOnAxis(polygon: Polygon, axis: Vector): { max: number, min: number } {
+        const vertices: Vector[] = polygon.worldVertices;
+
+        let min = VectorMath.dot(vertices[0], axis);
+        let max = min;
+
+        for (const vertex of vertices) {
+            const projection = VectorMath.dot(vertex, axis);
+
+            if (projection < min) min = projection;
+
+            if (projection > max) max = projection;
+        }
+
+        return { max: max, min: min };
+    }
     
     private resolveCollision(object1: RigidBody, object2: RigidBody): void {
         if (object1 instanceof Circle && object2 instanceof Circle) {
