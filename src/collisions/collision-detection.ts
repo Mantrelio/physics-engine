@@ -59,7 +59,7 @@ export class CollisionDetection {
         return false;
     }
 
-    private isCirclePolygonCollision(circle: Circle, polygon: Polygon) {
+    private isCirclePolygonCollision(circle: Circle, polygon: Polygon): boolean {
         const axes: Vector[] = [];
 
         axes.push(...this.getPolygonAxes(polygon));
@@ -77,7 +77,7 @@ export class CollisionDetection {
         return true;
     }
 
-    private isPolygonPolygonCollision(polygonA: Polygon, polygonB: Polygon) {
+    private isPolygonPolygonCollision(polygonA: Polygon, polygonB: Polygon): boolean {
         const axes: Vector[] = [];
 
         axes.push(...this.getPolygonAxes(polygonA));
