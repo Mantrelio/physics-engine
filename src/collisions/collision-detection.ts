@@ -5,6 +5,7 @@ import { Vector } from "../vectors/entities/vector";
 import { VectorMath } from "../vectors/vector-math";
 import { AABB } from "./axis-aligned-bounding-box";
 import { QuadtreeNode } from "./data-structures/quadtree-node";
+import { Interval } from "./types/interval.type";
 
 export class CollisionDetection {
     public rootQuadrantNode: QuadtreeNode;
@@ -63,11 +64,6 @@ export class CollisionDetection {
 
         axes.push(...this.getPolygonAxes(polygon));
         axes.push(this.getCirclePolygonAxis(circle, polygon));
-
-        for (const axis of axes) {
-
-        }
-
     }
     
     private isCircleCircleCollision(circleA: Circle, circleB: Circle): boolean {
@@ -98,7 +94,7 @@ export class CollisionDetection {
         return axes;
     }
 
-    private projectPolygonOnAxis(polygon: Polygon, axis: Vector): { max: number, min: number } {
+    private projectPolygonOnAxis(polygon: Polygon, axis: Vector): Interval {
         const vertices: Vector[] = polygon.worldVertices;
 
         let min = VectorMath.dot(vertices[0], axis);
@@ -133,7 +129,7 @@ export class CollisionDetection {
         return closestVertex;
     }
 
-    private projectCircleOnAxis(circle: Circle, axis: Vector): { max: number, min: number } {
+    private projectCircleOnAxis(circle: Circle, axis: Vector): Interval {
         const centerProjection = VectorMath.dot(circle.position, axis);
 
         return {
