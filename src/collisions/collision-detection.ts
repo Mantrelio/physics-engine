@@ -64,6 +64,17 @@ export class CollisionDetection {
 
         axes.push(...this.getPolygonAxes(polygon));
         axes.push(this.getCirclePolygonAxis(circle, polygon));
+
+        for (const axis of axes) {
+            const circleLimits: Interval = this.projectCircleOnAxis(circle, axis);
+            const polygonLimits: Interval = this.projectPolygonOnAxis(polygon, axis);
+
+            if (circleLimits.max < polygonLimits.min || circleLimits.min > polygonLimits.max) {
+                return false;
+            }
+        }
+
+        return true;
     }
     
     private isCircleCircleCollision(circleA: Circle, circleB: Circle): boolean {
