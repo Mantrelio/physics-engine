@@ -63,7 +63,7 @@ export class CollisionDetection {
         const axes: Vector[] = [];
 
         axes.push(...this.getPolygonAxes(polygon));
-        axes.push(this.getCirclePolygonAxis(circle, polygon));
+        axes.push(this.getCircleAxis(circle, polygon));
 
         for (const axis of axes) {
             const circleLimits: Interval = this.projectCircleOnAxis(circle, axis);
@@ -140,7 +140,7 @@ export class CollisionDetection {
         return { max: max, min: min };
     }
 
-    private getCirclePolygonAxis(circle: Circle, polygon: Polygon): Vector {
+    private getCircleAxis(circle: Circle, polygon: Polygon): Vector {
         const vertices: Vector[] = polygon.worldVertices;
 
         let closestVertex: Vector = vertices[0];
@@ -155,7 +155,7 @@ export class CollisionDetection {
             }
         }
 
-        return closestVertex;
+        return VectorMath.subtract(circle.position, closestVertex).normalize();
     }
 
     private projectCircleOnAxis(circle: Circle, axis: Vector): Interval {
