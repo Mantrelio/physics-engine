@@ -92,7 +92,25 @@ export class CollisionDetection {
         return { max: max, min: min };
     }
 
-    private projectCircleOnAxis(circle: Circle, axis: Vector): { max: number, min: number } {
+    private getCirclePolygonAxis(circle: Circle, polygon: Polygon): Vector {
+        const vertices: Vector[] = polygon.worldVertices;
+
+        let closestVertex: Vector = vertices[0];
+        let closestDistance: number = VectorMath.subtract(circle.position, vertices[0]).magnitude();
+
+        for (const vertex of vertices) {
+            const distance = VectorMath.subtract(circle.position, vertex).magnitude();
+
+            if (distance < closestDistance) {
+                closestVertex = vertex;
+                closestDistance = distance;
+            }
+        }
+
+        return closestVertex;
+    }
+
+    private projectCirclePolygonOnAxis(circle: Circle, axis: Vector): { max: number, min: number } {
         const centerProjection = VectorMath.dot(circle.position, axis);
 
         return {
