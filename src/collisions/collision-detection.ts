@@ -91,6 +91,15 @@ export class CollisionDetection {
 
         return { max: max, min: min };
     }
+
+    private projectCircleOnAxis(circle: Circle, axis: Vector): { max: number, min: number } {
+        const centerProjection = VectorMath.dot(circle.position, axis);
+
+        return {
+            min: centerProjection - circle.radius,
+            max: centerProjection + circle.radius
+        };
+    }
     
     private resolveCollision(object1: RigidBody, object2: RigidBody): void {
         if (object1 instanceof Circle && object2 instanceof Circle) {
