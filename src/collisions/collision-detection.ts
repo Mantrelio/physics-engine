@@ -111,14 +111,12 @@ export class CollisionDetection {
     
     private isCircleCircleCollision(circleA: Circle, circleB: Circle): CollisionData | null {
         const radii: number = circleA.radius + circleB.radius;
-        const distanceBetweenObjects: Vector = VectorMath.subtract(circleA.position, circleB.position);
+        const distanceBetweenObjects: Vector = VectorMath.subtract(circleB.position, circleA.position);
 
-        if (distanceBetweenObjects.magnitude() > radii) {
-            return null;
-        }
+        if (distanceBetweenObjects.magnitude() > radii) return null;
 
-        const collisionNormal: Vector = distanceBetweenObjects;
         const peneterationDepth: number = radii - distanceBetweenObjects.magnitude()
+        const collisionNormal: Vector = distanceBetweenObjects.normalize();
 
         return { objectA: circleA, objectB: circleB, peneterationDepth: peneterationDepth, collisionNormal: collisionNormal };
     }
