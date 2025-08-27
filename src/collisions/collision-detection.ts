@@ -81,6 +81,8 @@ export class CollisionDetection {
                 collisionNormal = axis;
             }
         }
+        
+        collisionNormal = this.orientAxis(circle, polygon, collisionNormal);
 
         return { objectA: circle, objectB: polygon, peneterationDepth: minPeneterationDepth, collisionNormal: collisionNormal };
     }
@@ -98,9 +100,7 @@ export class CollisionDetection {
             const polygonALimits: Interval = this.projectPolygonOnAxis(polygonA, axis);
             const polygonBLimits: Interval = this.projectPolygonOnAxis(polygonB, axis);
 
-            if (polygonALimits.max < polygonBLimits.min || polygonALimits.min > polygonBLimits.max) {
-                return null;
-            }
+            if (polygonALimits.max < polygonBLimits.min || polygonALimits.min > polygonBLimits.max) return null;
 
             const axisPeneterationDepth: number = Math.min(polygonALimits.max - polygonBLimits.min, polygonBLimits.max - polygonALimits.min);
 
@@ -109,6 +109,8 @@ export class CollisionDetection {
                 collisionNormal = axis;
             }
         }
+
+        collisionNormal = this.orientAxis(polygonA, polygonB, collisionNormal);
 
         return { objectA: polygonA, objectB: polygonB, peneterationDepth: minPeneterationDepth, collisionNormal: collisionNormal };
     }
@@ -184,5 +186,13 @@ export class CollisionDetection {
             min: centerProjection - circle.radius,
             max: centerProjection + circle.radius
         };
+    }
+
+    private orientAxis(rigidBodyA: RigidBody, rigidBodyB: RigidBody, axis: Vector): Vector {
+        const distance: Vector = VectorMath.subtract(rigidBodyB.position, rigidBodyA.position);
+
+        if (VectorMath.dot(distance, axis) < 0) axis = new Vector(-axis.x, -axis.y);
+
+        return axis;
     }
 }
