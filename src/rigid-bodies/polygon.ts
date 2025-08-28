@@ -30,6 +30,8 @@ export class Polygon extends RigidBody {
                 size * Math.sin(angle)
             ));
         }
+
+        this.momentOfIntertia = 0.5 * mass * size * size * (Math.sin(Math.PI / sideCount) / (Math.PI / sideCount));
     }
 
     public getRenderData(): PolygonRenderData {

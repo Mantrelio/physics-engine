@@ -15,6 +15,8 @@ export class Circle extends RigidBody {
         acceleration?: Vector
     ) {
         super(position, velocity, mass, acceleration, Shape.CIRCLE);
+
+        this.momentOfIntertia = 1 / 2 * mass * radius * radius;
     }
 
     private generateRandomColor(): string {
