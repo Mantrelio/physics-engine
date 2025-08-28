@@ -9,9 +9,12 @@ export class Square extends Polygon {
             mass: number,
             position: Vector,   
             velocity?: Vector, 
-            acceleration?: Vector
+            acceleration?: Vector,
+            angularAcceleration?: number,
+            angularVelocity?: number,
+            rotationAngle?: number
     ) {
-        super(4, size, mass, position, velocity, acceleration);
+        super(4, size, mass, position, velocity, acceleration, angularAcceleration, angularVelocity, rotationAngle);
 
         this.vertices = [
             new Vector(-size, -size),

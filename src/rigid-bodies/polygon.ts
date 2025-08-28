@@ -15,9 +15,12 @@ export class Polygon extends RigidBody {
             mass: number,
             position: Vector,   
             velocity?: Vector, 
-            acceleration?: Vector
+            acceleration?: Vector,
+            angularAcceleration?: number,
+            angularVelocity?: number,
+            rotationAngle?: number
     ) {
-        super(position, velocity, mass, acceleration, Shape.POLYGON);
+        super(position, velocity, mass, acceleration, Shape.POLYGON, angularVelocity, angularAcceleration, rotationAngle);
 
         for (let i = 0; i < sideCount; i++) {
             const angle: number = (2 * Math.PI * i) / sideCount - Math.PI / 2;
@@ -35,15 +38,15 @@ export class Polygon extends RigidBody {
             x: this.position.x,
             y: this.position.y,
             size: this.size,
-            vertices: this.vertices.map(vertex => 
-                VectorMath.add(vertex, this.position)
-            )
+            vertices: this.worldVertices
         };
     }
 
     public get worldVertices(): Vector[] {
         const worldVertices: Vector[] = this.vertices.map(vertex => {
-            return VectorMath.add(vertex, this.position)
+            const rotatedVertice: Vector = VectorMath.rotate(vertex, this.rotationAngle);
+
+            return VectorMath.add(rotatedVertice, this.position)
         });
 
         return worldVertices;

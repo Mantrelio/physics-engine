@@ -131,7 +131,7 @@ export class World {
         this.objects.forEach(object => {
             this.applyGravity(object);
             this.applyDrag(object);
-            object.updatePosition(deltaTime);
+            object.updateDynamics(deltaTime);
             this.applyConstraints(object);
         });
     }

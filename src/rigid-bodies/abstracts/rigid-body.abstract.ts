@@ -10,7 +10,11 @@ export abstract class RigidBody {
         public velocity: Vector = new Vector(0, 0),
         public readonly mass: number,
         protected acceleration: Vector = new Vector(0, 0),
-        public readonly shape: Shape
+        public readonly shape: Shape,
+        public angularVelocity: number = 0,
+        public angularAcceleration: number = 0,
+        public rotationAngle: number = 0,
+        public momentOfIntertia: number = 0
     ) {}
 
     public applyForce(force: Vector): void {
@@ -18,11 +22,22 @@ export abstract class RigidBody {
         this.acceleration.add(producedAcceleration);
     }
 
-    public updatePosition(deltaTime: number): void {
+    public updateDynamics(deltaTime: number): void {
+        this.updatePosition(deltaTime);
+        this.updateRotation(deltaTime);
+    }
+
+    private updatePosition(deltaTime: number): void {
         this.velocity.add(VectorMath.multiply(this.acceleration, deltaTime));
         this.position.add(VectorMath.multiply(this.velocity, deltaTime).multiply(100)).
             add(VectorMath.multiply(this.acceleration, deltaTime * deltaTime * 0.5).multiply(100));
         this.acceleration.multiply(0);
+    }
+
+    private updateRotation(deltaTime: number): void {
+        this.angularVelocity += this.angularAcceleration * deltaTime;
+        this.rotationAngle += this.angularVelocity * deltaTime;
+        this.angularAcceleration = 0;
     }
 
     public abstract getRenderData(): BaseShapeRenderData;
