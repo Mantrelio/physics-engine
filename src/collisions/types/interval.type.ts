@@ -1,4 +1,4 @@
 export type Interval = {
-    max: number,
-    min: number
+    max: number;
+    min: number;
 }

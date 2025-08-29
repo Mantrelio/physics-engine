@@ -7,6 +7,7 @@ import { AABB } from "./axis-aligned-bounding-box";
 import { CollisionResolver } from "./collision-resolver";
 import { QuadtreeNode } from "./data-structures/quadtree-node";
 import { CollisionData } from "./types/collision-data.type";
+import { Edge } from "./types/edge.type";
 import { Interval } from "./types/interval.type";
 
 export class CollisionDetection {
@@ -34,7 +35,7 @@ export class CollisionDetection {
     public checkForCollision(worldObjects: RigidBody[]): void {
         this.createCollisionGrid(worldObjects);
 
-        const iterations: number = 5;
+        const iterations: number = 3;
 
         for (let i = 0; i < iterations; i++) {
             for (const object of worldObjects) {
@@ -42,6 +43,7 @@ export class CollisionDetection {
 
                 for (const collider of potentialColliders) {
                     const collisionData: CollisionData | null =  this.detectCollision(object, collider);
+
                     if (collider !== object && collisionData) {
                         CollisionResolver.execute(collisionData);
                     }
@@ -121,7 +123,7 @@ export class CollisionDetection {
 
         if (distanceBetweenObjects.magnitude() > radii) return null;
 
-        const peneterationDepth: number = radii - distanceBetweenObjects.magnitude()
+        const peneterationDepth: number = radii - distanceBetweenObjects.magnitude();
         const collisionNormal: Vector = distanceBetweenObjects.normalize();
 
         return { objectA: circleA, objectB: circleB, peneterationDepth: peneterationDepth, collisionNormal: collisionNormal };
@@ -194,5 +196,29 @@ export class CollisionDetection {
         if (VectorMath.dot(distance, axis) < 0) axis = new Vector(-axis.x, -axis.y);
 
         return axis;
+    }
+
+    private findReferenceEdge(polygon: Polygon, collisionNormal: Vector): Edge {
+        const vertices: Vector[] = polygon.worldVertices;
+        
+        let edgeCornerIndex: number = 0;
+        let maxDot: number = -Infinity;
+
+        for (let i = 0; i < polygon.vertices.length; i++) {
+            const edge: Vector = VectorMath.subtract(vertices[(i+1) % vertices.length], vertices[i]);
+            const edgeNormal: Vector = new Vector(-edge.y, edge.x).normalize();
+
+            const alignment: number = VectorMath.dot(edgeNormal, collisionNormal);
+
+            if(alignment > maxDot) {
+                maxDot = alignment;
+                edgeCornerIndex = i;
+            }
+        }
+
+        return { 
+            start: vertices[edgeCornerIndex], 
+            end: vertices[(edgeCornerIndex + 1) % vertices.length]
+        };
     }
 }
