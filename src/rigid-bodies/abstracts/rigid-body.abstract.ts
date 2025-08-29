@@ -5,6 +5,8 @@ import { VectorMath } from "../../vectors/vector-math";
 import { Shape } from "../enums/shape.enum";
 
 export abstract class RigidBody {
+    public momentOfIntertia: number = 0;
+
     constructor(
         public position: Vector,
         public velocity: Vector = new Vector(0, 0),
@@ -14,12 +16,15 @@ export abstract class RigidBody {
         public angularVelocity: number = 0,
         public angularAcceleration: number = 0,
         public rotationAngle: number = 0,
-        public momentOfIntertia: number = 0
     ) {}
 
     public applyForce(force: Vector): void {
         const producedAcceleration: Vector = VectorMath.divide(force, this.mass);
         this.acceleration.add(producedAcceleration);
+    }
+
+    public applyTorque(torque: number): void {
+        this.angularAcceleration += torque / this.momentOfIntertia;
     }
 
     public updateDynamics(deltaTime: number): void {
