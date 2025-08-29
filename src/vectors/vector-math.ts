@@ -68,4 +68,8 @@ export class VectorMath {
     static normalize(vector: Vector): Vector {
         return VectorMath.divide(vector, VectorMath.magnitude(vector));
     }
+
+    static zero(): Vector {
+        return new Vector(0, 0);
+    }
 }
