@@ -11,15 +11,13 @@ import { Edge } from "./types/edge.type";
 import { Interval } from "./types/interval.type";
 
 export class CollisionDetection {
-    public rootQuadrantNode: QuadtreeNode;
-
     constructor(
         private readonly canvasWidth: number,
         private readonly canvasHeight: number
     ) {}
 
-    private createCollisionGrid(worldObjects: RigidBody[]): void {
-        this.rootQuadrantNode = new QuadtreeNode(
+    private createCollisionGrid(worldObjects: RigidBody[]): QuadtreeNode {
+        const rootQuadrantNode: QuadtreeNode = new QuadtreeNode(
             new AABB(
                 new Vector(this.canvasWidth / 2, this.canvasHeight / 2),
                 this.canvasWidth / 2,
@@ -28,18 +26,20 @@ export class CollisionDetection {
         );
 
         worldObjects.forEach(object => {
-            this.rootQuadrantNode.insert(object);
+            rootQuadrantNode.insert(object);
         });
+
+        return rootQuadrantNode;
     }
 
     public checkForCollision(worldObjects: RigidBody[]): void {
-        this.createCollisionGrid(worldObjects);
+        const rootQuadrantNode: QuadtreeNode = this.createCollisionGrid(worldObjects);
 
         const iterations: number = 3;
 
         for (let i = 0; i < iterations; i++) {
             for (const object of worldObjects) {
-                const potentialColliders: RigidBody[] = this.rootQuadrantNode.query(object.aabb);
+                const potentialColliders: RigidBody[] = rootQuadrantNode.query(object.aabb);
 
                 for (const collider of potentialColliders) {
                     const collisionData: CollisionData | null =  this.detectCollision(object, collider);
