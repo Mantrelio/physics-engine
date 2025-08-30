@@ -6,4 +6,5 @@ export type CollisionData = {
     objectA: RigidBody;
     objectB: RigidBody;
     peneterationDepth: number;
+    referenceBody: RigidBody;
 }

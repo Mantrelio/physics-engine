@@ -62,13 +62,11 @@ export class CollisionDetection {
     }
 
     private isCirclePolygonCollision(circle: Circle, polygon: Polygon): CollisionData | null {
-        const axes: Vector[] = [];
-
-        axes.push(...this.getPolygonAxes(polygon));
-        axes.push(this.getCircleAxis(circle, polygon));
+        const axes: Vector[] = [...this.getPolygonAxes(polygon), this.getCircleAxis(circle, polygon)];
 
         let minPeneterationDepth: number = Infinity;
-        let collisionNormal: Vector = new Vector(0, 0);
+        let collisionNormal: Vector = VectorMath.zero();
+        let referenceBody: RigidBody = polygon;
  
         for (const axis of axes) {
             const circleLimits: Interval = this.projectCircleOnAxis(circle, axis);
@@ -81,22 +79,26 @@ export class CollisionDetection {
             if (minPeneterationDepth > axisPeneterationDepth) {
                 minPeneterationDepth = axisPeneterationDepth;
                 collisionNormal = axis;
+
+                if (axes.indexOf(axis) > polygon.sideCount) {
+                    referenceBody = circle;
+                } else {
+                    referenceBody = polygon;
+                }
             }
         }
         
         collisionNormal = this.orientAxis(circle, polygon, collisionNormal);
 
-        return { objectA: circle, objectB: polygon, peneterationDepth: minPeneterationDepth, collisionNormal: collisionNormal };
+        return { objectA: circle, objectB: polygon, peneterationDepth: minPeneterationDepth, collisionNormal: collisionNormal, referenceBody: referenceBody };
     }
 
     private isPolygonPolygonCollision(polygonA: Polygon, polygonB: Polygon): CollisionData | null {
-        const axes: Vector[] = [];
-
-        axes.push(...this.getPolygonAxes(polygonA));
-        axes.push(...this.getPolygonAxes(polygonB));
+        const axes: Vector[] = [...this.getPolygonAxes(polygonA), ...this.getPolygonAxes(polygonB)];
 
         let minPeneterationDepth: number = Infinity;
         let collisionNormal: Vector = new Vector(0, 0);
+        let referenceBody: RigidBody = polygonA;
 
         for (const axis of axes) {
             const polygonALimits: Interval = this.projectPolygonOnAxis(polygonA, axis);
@@ -109,12 +111,18 @@ export class CollisionDetection {
             if (minPeneterationDepth > axisPeneterationDepth) {
                 minPeneterationDepth = axisPeneterationDepth;
                 collisionNormal = axis;
+
+                if (axes.indexOf(axis) > polygonA.sideCount) {
+                    referenceBody = polygonB;
+                } else {
+                    referenceBody = polygonA;
+                }
             }
         }
 
         collisionNormal = this.orientAxis(polygonA, polygonB, collisionNormal);
 
-        return { objectA: polygonA, objectB: polygonB, peneterationDepth: minPeneterationDepth, collisionNormal: collisionNormal };
+        return { objectA: polygonA, objectB: polygonB, peneterationDepth: minPeneterationDepth, collisionNormal: collisionNormal, referenceBody: referenceBody };
     }
     
     private isCircleCircleCollision(circleA: Circle, circleB: Circle): CollisionData | null {
@@ -126,7 +134,7 @@ export class CollisionDetection {
         const peneterationDepth: number = radii - distanceBetweenObjects.magnitude();
         const collisionNormal: Vector = distanceBetweenObjects.normalize();
 
-        return { objectA: circleA, objectB: circleB, peneterationDepth: peneterationDepth, collisionNormal: collisionNormal };
+        return { objectA: circleA, objectB: circleB, peneterationDepth: peneterationDepth, collisionNormal: collisionNormal, referenceBody: circleA };
     }
 
     private getPolygonAxes(polygon: Polygon): Vector[] {
