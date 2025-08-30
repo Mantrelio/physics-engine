@@ -66,7 +66,7 @@ export class CollisionDetection {
 
         let minPeneterationDepth: number = Infinity;
         let collisionNormal: Vector = VectorMath.zero();
-        let referenceBody: RigidBody = polygon;
+        let referenceBody: Polygon = polygon;
  
         for (const axis of axes) {
             const circleLimits: Interval = this.projectCircleOnAxis(circle, axis);
@@ -79,18 +79,19 @@ export class CollisionDetection {
             if (minPeneterationDepth > axisPeneterationDepth) {
                 minPeneterationDepth = axisPeneterationDepth;
                 collisionNormal = axis;
-
-                if (axes.indexOf(axis) > polygon.sideCount) {
-                    referenceBody = circle;
-                } else {
-                    referenceBody = polygon;
-                }
             }
         }
         
         collisionNormal = this.orientAxis(circle, polygon, collisionNormal);
+        const referenceEdge: Edge = this.findReferenceEdge(referenceBody, collisionNormal);
 
-        return { objectA: circle, objectB: polygon, peneterationDepth: minPeneterationDepth, collisionNormal: collisionNormal, referenceBody: referenceBody };
+        return {
+            referenceBody: referenceBody,
+            incidentBody: circle, 
+            peneterationDepth: minPeneterationDepth, 
+            collisionNormal: collisionNormal, 
+            referenceEdge: referenceEdge 
+        };
     }
 
     private isPolygonPolygonCollision(polygonA: Polygon, polygonB: Polygon): CollisionData | null {
@@ -98,7 +99,7 @@ export class CollisionDetection {
 
         let minPeneterationDepth: number = Infinity;
         let collisionNormal: Vector = new Vector(0, 0);
-        let referenceBody: RigidBody = polygonA;
+        let referenceBody: Polygon = polygonA;
 
         for (const axis of axes) {
             const polygonALimits: Interval = this.projectPolygonOnAxis(polygonA, axis);
@@ -121,20 +122,33 @@ export class CollisionDetection {
         }
 
         collisionNormal = this.orientAxis(polygonA, polygonB, collisionNormal);
+        const referenceEdge: Edge = this.findReferenceEdge(referenceBody, collisionNormal);
 
-        return { objectA: polygonA, objectB: polygonB, peneterationDepth: minPeneterationDepth, collisionNormal: collisionNormal, referenceBody: referenceBody };
+        return { 
+            referenceBody: referenceBody,
+            incidentBody: (referenceBody === polygonA) ? polygonB : polygonA,
+            peneterationDepth: minPeneterationDepth, 
+            collisionNormal: collisionNormal, 
+            referenceEdge: referenceEdge 
+        };
     }
     
     private isCircleCircleCollision(circleA: Circle, circleB: Circle): CollisionData | null {
         const radii: number = circleA.radius + circleB.radius;
         const distanceBetweenObjects: Vector = VectorMath.subtract(circleB.position, circleA.position);
+        const referenceBody: RigidBody = circleA;
 
         if (distanceBetweenObjects.magnitude() > radii) return null;
 
         const peneterationDepth: number = radii - distanceBetweenObjects.magnitude();
         const collisionNormal: Vector = distanceBetweenObjects.normalize();
 
-        return { objectA: circleA, objectB: circleB, peneterationDepth: peneterationDepth, collisionNormal: collisionNormal, referenceBody: circleA };
+        return { 
+            referenceBody: referenceBody, 
+            incidentBody: circleB,
+            peneterationDepth: peneterationDepth, 
+            collisionNormal: collisionNormal
+        };
     }
 
     private getPolygonAxes(polygon: Polygon): Vector[] {
@@ -226,6 +240,30 @@ export class CollisionDetection {
 
         return { 
             start: vertices[edgeCornerIndex], 
+            end: vertices[(edgeCornerIndex + 1) % vertices.length]
+        };
+    }
+
+    private findIncidentEdge(polygon: Polygon, collisionNormal: Vector): Edge {
+        const vertices: Vector[] = polygon.worldVertices;
+
+        let edgeCornerIndex: number = 0;
+        let minDot: number = Infinity;
+
+        for (let i = 0; i < polygon.vertices.length; i++) {
+            const edge: Vector = VectorMath.subtract(vertices[(i+1) % vertices.length], vertices[i]);
+            const edgeNormal: Vector = new Vector(-edge.y, edge.x).normalize();
+
+            const alignment: number = VectorMath.dot(edgeNormal, collisionNormal);
+
+            if (alignment < minDot) {
+                minDot = alignment;
+                edgeCornerIndex = i;
+            }
+        }
+
+        return {
+            start: vertices[edgeCornerIndex],
             end: vertices[(edgeCornerIndex + 1) % vertices.length]
         };
     }
