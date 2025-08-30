@@ -267,4 +267,28 @@ export class CollisionDetection {
             end: vertices[(edgeCornerIndex + 1) % vertices.length]
         };
     }
+
+    private clipIncidentEdge(incidentEdge: Edge, planePoint: Vector, planeNormal: Vector): Vector[] {
+        let intersectingPoints: Vector[] = [];
+
+        const startDistanceFromPlane: number = VectorMath.dot(planeNormal, VectorMath.subtract(incidentEdge.start, planePoint));
+        const endDistanceFromPlane: number = VectorMath.dot(planeNormal, VectorMath.subtract(incidentEdge.end, planePoint));
+
+        const isStartInsidePlane: boolean = startDistanceFromPlane >= 0;
+        const isEndInsidePlane: boolean = endDistanceFromPlane >= 0;
+
+        if (isStartInsidePlane) intersectingPoints.push(incidentEdge.start);
+        if (isEndInsidePlane) intersectingPoints.push(incidentEdge.end);
+        
+        if (startDistanceFromPlane !== endDistanceFromPlane) {
+            const t: number = startDistanceFromPlane / (startDistanceFromPlane - endDistanceFromPlane);
+            const intersection: Vector = VectorMath.add(
+                incidentEdge.start,
+                VectorMath.multiply(VectorMath.subtract(incidentEdge.end, incidentEdge.start), t)
+            );
+            intersectingPoints.push(intersection);
+        }
+
+        return intersectingPoints;
+    }
 }
