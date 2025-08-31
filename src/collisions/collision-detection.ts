@@ -15,7 +15,7 @@ export class CollisionDetection {
         private readonly canvasWidth: number,
         private readonly canvasHeight: number
     ) {}
-
+    //WARNING: COLLISION DOESN'T WORK AS INTENDED PROBABLY BECAUSE OF THE CHANGES TO COLLISION DATA PROPERTY
     private createCollisionGrid(worldObjects: RigidBody[]): QuadtreeNode {
         const rootQuadrantNode: QuadtreeNode = new QuadtreeNode(
             new AABB(
@@ -291,4 +291,17 @@ export class CollisionDetection {
 
         return intersectingPoints;
     }
+
+    private projectOntoReferenceFace(point: Vector, referencePoint: Vector, referenceNormal: Vector): Vector {
+        const distance: number = VectorMath.dot(
+            VectorMath.subtract(point, referencePoint),
+            referenceNormal
+        );
+
+        return VectorMath.subtract(
+            point,
+            VectorMath.multiply(referenceNormal, distance)
+        );
+    }
+    
 }
