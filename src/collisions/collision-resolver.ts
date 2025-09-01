@@ -5,23 +5,23 @@ import { CollisionData } from "./types/collision-data.type";
 
 export class CollisionResolver {
     static execute(collisionData: CollisionData): void {
-        const { referenceBody, incidentBody, peneterationDepth: penetrationDepth, collisionNormal } = collisionData;
+        const { objectA, objectB, penetrationDepth, collisionNormal } = collisionData;
 
-        const relativeVelocity: Vector = VectorMath.subtract(incidentBody.velocity, referenceBody.velocity);
+        const relativeVelocity: Vector = VectorMath.subtract(objectB.velocity, objectA.velocity);
         const velocityAlongNormalScalar: number = VectorMath.dot(relativeVelocity, collisionNormal);
 
         if (velocityAlongNormalScalar > 0) return;
 
         const restitution: number = 0.8;
 
-        const inverseObjectAMass: number = 1 / referenceBody.mass;
-        const inverseObjectBMass: number = 1 / incidentBody.mass; 
+        const inverseObjectAMass: number = 1 / objectA.mass;
+        const inverseObjectBMass: number = 1 / objectB.mass; 
 
         const impulseScalar: number = -(1 + restitution) * velocityAlongNormalScalar / (inverseObjectAMass + inverseObjectBMass);
         const impulseVector: Vector = VectorMath.multiply(collisionNormal, impulseScalar);
 
-        this.resolveObjectPositions(referenceBody, incidentBody, penetrationDepth, inverseObjectAMass, inverseObjectBMass, collisionNormal);
-        this.resolveObjectVelocities(referenceBody, incidentBody, inverseObjectAMass, inverseObjectBMass, impulseVector);
+        this.resolveObjectPositions(objectA, objectB, penetrationDepth, inverseObjectAMass, inverseObjectBMass, collisionNormal);
+        this.resolveObjectVelocities(objectA, objectB, inverseObjectAMass, inverseObjectBMass, impulseVector);
     }
     
     private static resolveObjectPositions(

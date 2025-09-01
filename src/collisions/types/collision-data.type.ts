@@ -1,11 +1,11 @@
 import { RigidBody } from "../../rigid-bodies/abstracts/rigid-body.abstract";
 import { Vector } from "../../vectors/entities/vector";
-import { Edge } from "./edge.type";
+import { ContactPoint } from "./contact-point";
 
 export type CollisionData = {
     collisionNormal: Vector;
-    referenceBody: RigidBody;
-    incidentBody: RigidBody;
-    peneterationDepth: number;
-    referenceEdge?: Edge;
+    objectA: RigidBody;
+    objectB: RigidBody;
+    penetrationDepth: number;
+    contactPoints: ContactPoint[];
 }

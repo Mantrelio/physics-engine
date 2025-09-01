@@ -7,15 +7,17 @@ import { AABB } from "./axis-aligned-bounding-box";
 import { CollisionResolver } from "./collision-resolver";
 import { QuadtreeNode } from "./data-structures/quadtree-node";
 import { CollisionData } from "./types/collision-data.type";
+import { ContactPoint } from "./types/contact-point";
 import { Edge } from "./types/edge.type";
 import { Interval } from "./types/interval.type";
+import { Plane } from "./types/plane.type";
 
 export class CollisionDetection {
     constructor(
         private readonly canvasWidth: number,
         private readonly canvasHeight: number
     ) {}
-    //WARNING: COLLISION DOESN'T WORK AS INTENDED PROBABLY BECAUSE OF THE CHANGES TO COLLISION DATA PROPERTY
+
     private createCollisionGrid(worldObjects: RigidBody[]): QuadtreeNode {
         const rootQuadrantNode: QuadtreeNode = new QuadtreeNode(
             new AABB(
@@ -83,14 +85,13 @@ export class CollisionDetection {
         }
         
         collisionNormal = this.orientAxis(circle, polygon, collisionNormal);
-        const referenceEdge: Edge = this.findReferenceEdge(referenceBody, collisionNormal);
 
         return {
-            referenceBody: referenceBody,
-            incidentBody: circle, 
-            peneterationDepth: minPeneterationDepth, 
+            objectA: polygon,
+            objectB: circle, 
+            penetrationDepth: minPeneterationDepth, 
             collisionNormal: collisionNormal, 
-            referenceEdge: referenceEdge 
+            contactPoints: []
         };
     }
 
@@ -122,14 +123,17 @@ export class CollisionDetection {
         }
 
         collisionNormal = this.orientAxis(polygonA, polygonB, collisionNormal);
-        const referenceEdge: Edge = this.findReferenceEdge(referenceBody, collisionNormal);
+
+        const incidentBody: Polygon = (referenceBody === polygonA) ? polygonB: polygonA;
+
+        const contactPoints: ContactPoint[] = this.getPolygonPolygonContactPoints(incidentBody, referenceBody, collisionNormal);
 
         return { 
-            referenceBody: referenceBody,
-            incidentBody: (referenceBody === polygonA) ? polygonB : polygonA,
-            peneterationDepth: minPeneterationDepth, 
+            objectA: polygonA,
+            objectB: polygonB,
+            penetrationDepth: minPeneterationDepth, 
             collisionNormal: collisionNormal, 
-            referenceEdge: referenceEdge 
+            contactPoints: contactPoints
         };
     }
     
@@ -144,10 +148,11 @@ export class CollisionDetection {
         const collisionNormal: Vector = distanceBetweenObjects.normalize();
 
         return { 
-            referenceBody: referenceBody, 
-            incidentBody: circleB,
-            peneterationDepth: peneterationDepth, 
-            collisionNormal: collisionNormal
+            objectA: circleA, 
+            objectB: circleB,
+            penetrationDepth: peneterationDepth, 
+            collisionNormal: collisionNormal,
+            contactPoints: []
         };
     }
 
@@ -220,13 +225,13 @@ export class CollisionDetection {
         return axis;
     }
 
-    private findReferenceEdge(polygon: Polygon, collisionNormal: Vector): Edge {
-        const vertices: Vector[] = polygon.worldVertices;
+    private findReferenceEdge(referenceBody: Polygon, collisionNormal: Vector): Edge {
+        const vertices: Vector[] = referenceBody.worldVertices;
         
         let edgeCornerIndex: number = 0;
         let maxDot: number = -Infinity;
 
-        for (let i = 0; i < polygon.vertices.length; i++) {
+        for (let i = 0; i < referenceBody.vertices.length; i++) {
             const edge: Vector = VectorMath.subtract(vertices[(i+1) % vertices.length], vertices[i]);
             const edgeNormal: Vector = new Vector(-edge.y, edge.x).normalize();
 
@@ -244,13 +249,33 @@ export class CollisionDetection {
         };
     }
 
-    private findIncidentEdge(polygon: Polygon, collisionNormal: Vector): Edge {
-        const vertices: Vector[] = polygon.worldVertices;
+    private getPolygonPolygonContactPoints(incidentBody: Polygon, referenceBody: Polygon, collisionNormal: Vector) {
+        const referenceEdge: Edge = this.findReferenceEdge(referenceBody, collisionNormal);
+        const incidentEdge: Edge = this.findIncidentEdge(incidentBody, collisionNormal);
+
+        const [leftPlane, rightPlane] = this.getSidePlanes(referenceEdge, collisionNormal);
+
+        let contactPoints: ContactPoint[] = this.clipIncidentEdge(incidentEdge, leftPlane);
+
+        if (contactPoints.length >= 2) {
+            const clippedIncidentEdge: Edge = { start: contactPoints[0].position, end: contactPoints[1].position } 
+            contactPoints = this.clipIncidentEdge(clippedIncidentEdge, rightPlane);
+        }
+
+        const projectedContactPoints: ContactPoint[] = contactPoints.map(contactPoint => 
+            this.projectPointOnReferenceFace(contactPoint, referenceEdge.start, collisionNormal)
+        )
+
+        return projectedContactPoints;
+    }
+
+    private findIncidentEdge(incidentPolygon: Polygon, collisionNormal: Vector): Edge {
+        const vertices: Vector[] = incidentPolygon.worldVertices;
 
         let edgeCornerIndex: number = 0;
         let minDot: number = Infinity;
 
-        for (let i = 0; i < polygon.vertices.length; i++) {
+        for (let i = 0; i < incidentPolygon.vertices.length; i++) {
             const edge: Vector = VectorMath.subtract(vertices[(i+1) % vertices.length], vertices[i]);
             const edgeNormal: Vector = new Vector(-edge.y, edge.x).normalize();
 
@@ -268,17 +293,32 @@ export class CollisionDetection {
         };
     }
 
-    private clipIncidentEdge(incidentEdge: Edge, planePoint: Vector, planeNormal: Vector): Vector[] {
-        let intersectingPoints: Vector[] = [];
+    private getSidePlanes(referenceEdge: Edge, collisionNormal: Vector): Plane[] {
+        const tangent: Vector = VectorMath.subtract(referenceEdge.end, referenceEdge.start).normalize();
 
-        const startDistanceFromPlane: number = VectorMath.dot(planeNormal, VectorMath.subtract(incidentEdge.start, planePoint));
-        const endDistanceFromPlane: number = VectorMath.dot(planeNormal, VectorMath.subtract(incidentEdge.end, planePoint));
+        let inwardNormal: Vector = new Vector(-tangent.y, tangent.x);
+
+        if (VectorMath.dot(inwardNormal, collisionNormal) < 0) {
+            inwardNormal = VectorMath.multiply(inwardNormal, -1);
+        }
+
+        const leftPlane: Plane = { point: referenceEdge.start, normal: inwardNormal };
+        const rightPlane: Plane = { point: referenceEdge.end, normal: VectorMath.multiply(inwardNormal, -1) };
+
+        return [leftPlane, rightPlane];
+    }
+
+    private clipIncidentEdge(incidentEdge: Edge, plane: Plane): ContactPoint[] {
+        let intersectingPoints: ContactPoint[] = [];
+
+        const startDistanceFromPlane: number = VectorMath.dot(plane.normal, VectorMath.subtract(incidentEdge.start, plane.point));
+        const endDistanceFromPlane: number = VectorMath.dot(plane.normal, VectorMath.subtract(incidentEdge.end, plane.point));
 
         const isStartInsidePlane: boolean = startDistanceFromPlane >= 0;
         const isEndInsidePlane: boolean = endDistanceFromPlane >= 0;
 
-        if (isStartInsidePlane) intersectingPoints.push(incidentEdge.start);
-        if (isEndInsidePlane) intersectingPoints.push(incidentEdge.end);
+        if (isStartInsidePlane) intersectingPoints.push({ position: incidentEdge.start });
+        if (isEndInsidePlane) intersectingPoints.push({ position: incidentEdge.end });
         
         if (startDistanceFromPlane !== endDistanceFromPlane) {
             const t: number = startDistanceFromPlane / (startDistanceFromPlane - endDistanceFromPlane);
@@ -286,22 +326,25 @@ export class CollisionDetection {
                 incidentEdge.start,
                 VectorMath.multiply(VectorMath.subtract(incidentEdge.end, incidentEdge.start), t)
             );
-            intersectingPoints.push(intersection);
+            intersectingPoints.push({ position: intersection });
         }
 
         return intersectingPoints;
     }
 
-    private projectOntoReferenceFace(point: Vector, referencePoint: Vector, referenceNormal: Vector): Vector {
+    private projectPointOnReferenceFace(point: ContactPoint, referenceEdgeStartingPoint: Vector, collisionNormal: Vector): ContactPoint {
         const distance: number = VectorMath.dot(
-            VectorMath.subtract(point, referencePoint),
-            referenceNormal
+            VectorMath.subtract(point.position, referenceEdgeStartingPoint),
+            collisionNormal
         );
 
-        return VectorMath.subtract(
-            point,
-            VectorMath.multiply(referenceNormal, distance)
+        const contactPointPosition: Vector = VectorMath.subtract(
+            point.position,
+            VectorMath.multiply(collisionNormal, distance)
         );
+
+        return {
+            position: contactPointPosition
+        };
     }
-    
 }
