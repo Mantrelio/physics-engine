@@ -147,12 +147,14 @@ export class CollisionDetection {
         const peneterationDepth: number = radii - distanceBetweenObjects.magnitude();
         const collisionNormal: Vector = distanceBetweenObjects.normalize();
 
+        const contactPoint: ContactPoint = this.findCircleCirlceContactPoints(circleA, circleB);
+
         return { 
             objectA: circleA, 
             objectB: circleB,
             penetrationDepth: peneterationDepth, 
             collisionNormal: collisionNormal,
-            contactPoints: []
+            contactPoints: [contactPoint]
         };
     }
 
