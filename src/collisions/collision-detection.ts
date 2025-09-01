@@ -87,8 +87,8 @@ export class CollisionDetection {
         collisionNormal = this.orientAxis(circle, polygon, collisionNormal);
 
         return {
-            objectA: polygon,
-            objectB: circle, 
+            objectA: circle,
+            objectB: polygon, 
             penetrationDepth: minPeneterationDepth, 
             collisionNormal: collisionNormal, 
             contactPoints: []
@@ -249,7 +249,7 @@ export class CollisionDetection {
         };
     }
 
-    private getPolygonPolygonContactPoints(incidentBody: Polygon, referenceBody: Polygon, collisionNormal: Vector) {
+    private getPolygonPolygonContactPoints(incidentBody: Polygon, referenceBody: Polygon, collisionNormal: Vector): ContactPoint[] {
         const referenceEdge: Edge = this.findReferenceEdge(referenceBody, collisionNormal);
         const incidentEdge: Edge = this.findIncidentEdge(incidentBody, collisionNormal);
 
@@ -347,4 +347,17 @@ export class CollisionDetection {
             position: contactPointPosition
         };
     }
+
+    private findCircleCirlceContactPoints(circleA: Circle, circleB: Circle): ContactPoint {
+        const directionFromCenterToCenter: Vector = VectorMath.subtract(circleB.position, circleA.position).normalize();
+
+        const contactPointPosition: Vector = VectorMath.add(
+            circleA.position, 
+            VectorMath.multiply(directionFromCenterToCenter, circleA.radius)
+        );
+
+        return { 
+            position: contactPointPosition
+        };
+    } 
 }
