@@ -225,8 +225,9 @@ export class CollisionDetection {
         const distance: Vector = VectorMath.subtract(rigidBodyB.position, rigidBodyA.position);
 
         if (VectorMath.dot(distance, axis) < 0) axis = new Vector(-axis.x, -axis.y);
-
-        return axis;
+        const normalizedAxis = axis.normalize();
+        
+        return normalizedAxis;
     }
 
     private findReferenceEdge(referenceBody: Polygon, collisionNormal: Vector): Edge {
