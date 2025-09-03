@@ -36,6 +36,10 @@ export class Vector {
         return Math.sqrt(this.x * this.x + this.y * this.y);
     }
 
+    public magnitudeSquared(): number {
+        return this.x * this.x + this.y * this.y;
+    }
+
     public rotate(angleRadians: number): Vector {
         const cos = Math.cos(angleRadians);
         const sin = Math.sin(angleRadians);

@@ -59,6 +59,10 @@ export class VectorMath {
         return Math.sqrt(vector.x * vector.x + vector.y * vector.y);
     }
 
+    static magnitudeSquared(vector: Vector): number {
+        return vector.x * vector.x + vector.y * vector.y;
+    }
+
     static distance(vector1: Vector, vector2: Vector): number {
         const dx = vector1.x - vector2.x;
         const dy = vector1.y - vector2.y;
