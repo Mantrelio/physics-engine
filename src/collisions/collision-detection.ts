@@ -70,7 +70,6 @@ export class CollisionDetection {
 
         let minPeneterationDepth: number = Infinity;
         let collisionNormal: Vector = VectorMath.zero();
-        let referenceBody: Polygon = polygon;
  
         for (const axis of axes) {
             const circleLimits: Interval = this.projectCircleOnAxis(circle, axis);
@@ -88,12 +87,14 @@ export class CollisionDetection {
         
         collisionNormal = this.orientAxis(circle, polygon, collisionNormal);
 
+        const contactPoint: ContactPoint = this.findPolygonCircleContactPoints(polygon, circle);
+
         return {
             objectA: circle,
             objectB: polygon, 
             penetrationDepth: minPeneterationDepth, 
             collisionNormal: collisionNormal, 
-            contactPoints: []
+            contactPoints: [contactPoint]
         };
     }
 
@@ -142,7 +143,6 @@ export class CollisionDetection {
     private isCircleCircleCollision(circleA: Circle, circleB: Circle): CollisionData | null {
         const radii: number = circleA.radius + circleB.radius;
         const distanceBetweenObjects: Vector = VectorMath.subtract(circleB.position, circleA.position);
-        const referenceBody: RigidBody = circleA;
 
         if (distanceBetweenObjects.magnitude() > radii) return null;
 
@@ -363,5 +363,49 @@ export class CollisionDetection {
         return { 
             position: contactPointPosition
         };
-    } 
+    }
+
+    private findPolygonCircleContactPoints(polygon: Polygon, circle: Circle): ContactPoint {
+        let closestPointToCircleCenter: Vector = VectorMath.zero();
+        let minMagnitudeSquared = Infinity;
+
+        const polygonWorldVertices: Vector[] = polygon.worldVertices;
+
+        for (let i = 0; i < polygonWorldVertices.length; i++) {
+            const polygonEdge: Edge = {
+                start: polygonWorldVertices[i],
+                end: polygonWorldVertices[(i + 1) % polygonWorldVertices.length]
+            }
+            const closestPointOnEdge: Vector = this.closestPointOnEdgeFromCircleCenter(circle, polygonEdge);
+            
+            const pointToCircleVector: Vector = VectorMath.subtract(circle.position, closestPointOnEdge);
+            const magnitudeSquared: number = pointToCircleVector.magnitudeSquared();
+
+            if (magnitudeSquared < minMagnitudeSquared) {
+                minMagnitudeSquared = magnitudeSquared;
+                closestPointToCircleCenter = closestPointOnEdge;
+            }
+        }
+
+        return {
+            position: closestPointToCircleCenter
+        };
+    }
+
+    private closestPointOnEdgeFromCircleCenter(circle: Circle, edge: Edge): Vector {
+        const edgeVector: Vector = VectorMath.subtract(edge.end, edge.start);
+        const edgeStartToCircleCenterVector: Vector = VectorMath.subtract(circle.position, edge.start);
+
+        const projection: number = VectorMath.dot(edgeVector, edgeStartToCircleCenterVector);
+
+        let t = projection / edgeVector.magnitudeSquared();
+
+        if (t < 0) t = 0;
+        else if (t > 1) t = 1;
+
+        const edgeStartToPointSegmentVector: Vector = VectorMath.multiply(edgeVector, t);
+        const pointSegmentWorldVector: Vector = VectorMath.add(edge.start, edgeStartToPointSegmentVector);
+
+        return pointSegmentWorldVector;
+    }
 }
