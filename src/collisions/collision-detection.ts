@@ -234,10 +234,10 @@ export class CollisionDetection {
         let edgeCornerIndex: number = 0;
         let maxDot: number = -Infinity;
 
-        for (let i = 0; i < referenceBody.vertices.length; i++) {
+        for (let i = 0; i < vertices.length; i++) {
             const edge: Vector = VectorMath.subtract(vertices[(i+1) % vertices.length], vertices[i]);
-            const edgeNormal: Vector = new Vector(-edge.y, edge.x).normalize();
-
+            const rawNormal: Vector = new Vector(-edge.y, edge.x);
+            const edgeNormal: Vector = rawNormal.normalize();
             const alignment: number = VectorMath.dot(edgeNormal, collisionNormal);
 
             if(alignment > maxDot) {
