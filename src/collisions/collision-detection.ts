@@ -99,13 +99,16 @@ export class CollisionDetection {
     }
 
     private isPolygonPolygonCollision(polygonA: Polygon, polygonB: Polygon): CollisionData | null {
-        const axes: Vector[] = [...this.getPolygonAxes(polygonA), ...this.getPolygonAxes(polygonB)];
+        const axesA: Vector[] = this.getPolygonAxes(polygonA);
+        const axesB: Vector[] = this.getPolygonAxes(polygonB);
+        const axes: Vector[] = [...axesA, ...axesB];
 
         let minPeneterationDepth: number = Infinity;
         let collisionNormal: Vector = new Vector(0, 0);
         let referenceBody: Polygon = polygonA;
 
-        for (const axis of axes) {
+        for (let i = 0; i < axes.length; i++) {
+            const axis = axes[i];
             const polygonALimits: Interval = this.projectPolygonOnAxis(polygonA, axis);
             const polygonBLimits: Interval = this.projectPolygonOnAxis(polygonB, axis);
 
@@ -116,12 +119,7 @@ export class CollisionDetection {
             if (minPeneterationDepth > axisPeneterationDepth) {
                 minPeneterationDepth = axisPeneterationDepth;
                 collisionNormal = axis;
-
-                if (axes.indexOf(axis) > polygonA.sideCount) {
-                    referenceBody = polygonB;
-                } else {
-                    referenceBody = polygonA;
-                }
+                referenceBody =  (i < axesA.length) ? polygonA: polygonB;
             }
         }
 
