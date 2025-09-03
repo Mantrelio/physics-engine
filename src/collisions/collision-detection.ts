@@ -323,7 +323,7 @@ export class CollisionDetection {
         if (isStartInsidePlane) intersectingPoints.push({ position: incidentEdge.start });
         if (isEndInsidePlane) intersectingPoints.push({ position: incidentEdge.end });
         
-        if (startDistanceFromPlane !== endDistanceFromPlane) {
+        if (startDistanceFromPlane * endDistanceFromPlane < 0) {
             const t: number = startDistanceFromPlane / (startDistanceFromPlane - endDistanceFromPlane);
             const intersection: Vector = VectorMath.add(
                 incidentEdge.start,
