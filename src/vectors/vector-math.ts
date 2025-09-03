@@ -76,4 +76,8 @@ export class VectorMath {
     static zero(): Vector {
         return new Vector(0, 0);
     }
+
+    static crossScalarVector(scalar: number, vector: Vector): Vector {
+        return new Vector(-scalar * vector.y, scalar * vector.x);
+    }
 }
