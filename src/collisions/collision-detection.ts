@@ -149,7 +149,7 @@ export class CollisionDetection {
         const peneterationDepth: number = radii - distanceBetweenObjects.magnitude();
         const collisionNormal: Vector = distanceBetweenObjects.normalize();
 
-        const contactPoint: ContactPoint = this.findCircleCirlceContactPoints(circleA, circleB);
+        const contactPoint: ContactPoint = this.findCircleCircleContactPoints(circleA, circleB);
 
         return { 
             objectA: circleA, 
@@ -352,7 +352,7 @@ export class CollisionDetection {
         };
     }
 
-    private findCircleCirlceContactPoints(circleA: Circle, circleB: Circle): ContactPoint {
+    private findCircleCircleContactPoints(circleA: Circle, circleB: Circle): ContactPoint {
         const directionFromCenterToCenter: Vector = VectorMath.subtract(circleB.position, circleA.position).normalize();
 
         const contactPointPosition: Vector = VectorMath.add(
