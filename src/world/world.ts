@@ -132,8 +132,9 @@ export class World {
             this.applyDrag(object);
             object.updateDynamics(deltaTime);
             this.applyConstraints(object);
-            this.collisionDetection.checkForCollision(this.objects);
         });
+
+        this.collisionDetection.checkForCollision(this.objects);
     }
 
     public addObject(object: RigidBody): void {
