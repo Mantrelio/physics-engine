@@ -5,17 +5,16 @@ import { VectorMath } from "../../vectors/vector-math";
 import { Shape } from "../enums/shape.enum";
 
 export abstract class RigidBody {
-    public momentOfIntertia: number = 0;
-
     constructor(
         public position: Vector,
         public velocity: Vector = new Vector(0, 0),
-        public readonly mass: number,
-        protected acceleration: Vector = new Vector(0, 0),
+        public readonly mass: number = Infinity,
         public readonly shape: Shape,
+        public readonly inertia: number = Infinity,
         public angularVelocity: number = 0,
         public angularAcceleration: number = 0,
         public rotationAngle: number = 0,
+        protected acceleration: Vector = new Vector(0, 0)
     ) {}
 
     public applyForce(force: Vector): void {
@@ -24,7 +23,7 @@ export abstract class RigidBody {
     }
 
     public applyTorque(torque: number): void {
-        this.angularAcceleration += torque / this.momentOfIntertia;
+        this.angularAcceleration += torque / this.inertia;
     }
 
     public updateDynamics(deltaTime: number): void {
@@ -58,5 +57,13 @@ export abstract class RigidBody {
             halfWidth: aabb.halfWidth,
             halfHeight: aabb.halfHeight
         };
+    }
+
+    public get inverseMass(): number {
+        return 1 / this.mass;
+    }
+
+    public get inverseInertia(): number {
+        return 1 / this.inertia;
     }
 }

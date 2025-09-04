@@ -20,7 +20,19 @@ export class Polygon extends RigidBody {
             angularVelocity?: number,
             rotationAngle?: number
     ) {
-        super(position, velocity, mass, acceleration, Shape.POLYGON, angularVelocity, angularAcceleration, rotationAngle);
+        const inertia: number = 0.5 * mass * size * size * (Math.sin(Math.PI / sideCount) / (Math.PI / sideCount)); 
+
+        super(
+            position, 
+            velocity, 
+            mass, 
+            Shape.POLYGON, 
+            inertia, 
+            angularVelocity,
+            angularAcceleration, 
+            rotationAngle,
+            acceleration
+        );
 
         for (let i = 0; i < sideCount; i++) {
             const angle: number = (2 * Math.PI * i) / sideCount - Math.PI / 2;
@@ -30,8 +42,6 @@ export class Polygon extends RigidBody {
                 size * Math.sin(angle)
             ));
         }
-
-        this.momentOfIntertia = 0.5 * mass * size * size * (Math.sin(Math.PI / sideCount) / (Math.PI / sideCount));
     }
 
     public getRenderData(): PolygonRenderData {

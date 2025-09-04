@@ -12,11 +12,24 @@ export class Circle extends RigidBody {
         public readonly radius: number,
         mass: number,   
         velocity?: Vector, 
-        acceleration?: Vector
+        acceleration?: Vector,
+        angularVelocity?: number,
+        angularAcceleration?: number,
+        rotationAngle?: number,
     ) {
-        super(position, velocity, mass, acceleration, Shape.CIRCLE);
+        const inertia: number = 1 / 2 * mass * radius * radius;
 
-        this.momentOfIntertia = 1 / 2 * mass * radius * radius;
+        super(
+            position, 
+            velocity, 
+            mass,  
+            Shape.CIRCLE,
+            inertia,
+            angularVelocity,
+            angularAcceleration,
+            rotationAngle,
+            acceleration
+        );
     }
 
     private generateRandomColor(): string {
