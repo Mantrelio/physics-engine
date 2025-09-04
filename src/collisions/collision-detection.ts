@@ -39,18 +39,19 @@ export class CollisionDetection {
     public checkForCollision(worldObjects: RigidBody[]): void {
         const rootQuadrantNode: QuadtreeNode = this.createCollisionGrid(worldObjects);
 
-        const iterations: number = 3;
+        const iterations: number = 1;
 
         for (let i = 0; i < iterations; i++) {
             for (const object of worldObjects) {
                 const potentialColliders: RigidBody[] = rootQuadrantNode.query(object.aabb);
 
                 for (const collider of potentialColliders) {
+                    if (collider === object) continue;
+
                     const collisionData: CollisionData | null =  this.detectCollision(object, collider);
 
-                    if (collider !== object && collisionData) {
-                        CollisionResolver.execute(collisionData);
-                    }
+                    if (collisionData) CollisionResolver.execute(collisionData);
+                    
                 }
             }
         }
