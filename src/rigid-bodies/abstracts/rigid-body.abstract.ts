@@ -5,6 +5,9 @@ import { VectorMath } from "../../vectors/vector-math";
 import { Shape } from "../enums/shape.enum";
 
 export abstract class RigidBody {
+    private static nextId: number = 1;
+    public readonly id: number;
+
     constructor(
         public position: Vector,
         public velocity: Vector = new Vector(0, 0),
@@ -15,7 +18,9 @@ export abstract class RigidBody {
         public angularAcceleration: number = 0,
         public rotationAngle: number = 0,
         protected acceleration: Vector = new Vector(0, 0)
-    ) {}
+    ) {
+        this.id = RigidBody.nextId++;
+    }
 
     public applyForce(force: Vector): void {
         const producedAcceleration: Vector = VectorMath.divide(force, this.mass);
@@ -32,6 +37,7 @@ export abstract class RigidBody {
     }
 
     private updatePosition(deltaTime: number): void {
+        console.log("Update position called");
         this.velocity.add(VectorMath.multiply(this.acceleration, deltaTime));
         this.position.add(VectorMath.multiply(this.velocity, deltaTime).multiply(100)).
             add(VectorMath.multiply(this.acceleration, deltaTime * deltaTime * 0.5).multiply(100));
