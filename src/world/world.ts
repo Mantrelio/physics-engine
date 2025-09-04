@@ -116,7 +116,6 @@ export class World {
 
         while (this.accumulator >= this.fixedTimeStep && physicsStepsCount < this.physicsStepsLimit) {
             this.updatePhysics(this.fixedTimeStep);
-            this.collisionDetection.checkForCollision(this.objects);
 
             this.accumulator -= this.fixedTimeStep;
             physicsStepsCount++;
@@ -133,6 +132,7 @@ export class World {
             this.applyDrag(object);
             object.updateDynamics(deltaTime);
             this.applyConstraints(object);
+            this.collisionDetection.checkForCollision(this.objects);
         });
     }
 
