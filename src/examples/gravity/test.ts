@@ -2,7 +2,7 @@ import { Circle } from "../../rigid-bodies/circle";
 import { Vector } from "../../vectors/entities/vector";
 import { World } from "../../world/world";
 
-const world = new World(0, 'gravity');
+const world = new World(0, 'gravity', 1000, 1000);
 
 
 for(let i = 0; i < 50; i++) {

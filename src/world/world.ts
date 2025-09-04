@@ -6,6 +6,7 @@ import { Shape } from "../rigid-bodies/enums/shape.enum";
 import { Polygon } from "../rigid-bodies/polygon";
 import { Vector } from "../vectors/entities/vector";
 import { VectorMath } from "../vectors/vector-math";
+import { createCanvas, Canvas, CanvasRenderingContext2D } from "canvas";
 
 export class World {
     private objects: RigidBody[] = [];
@@ -74,37 +75,34 @@ export class World {
     constructor(
         private readonly airDensity: number,
         canvasId: string,
+        canvasWidth: number,
+        canvasHeight: number
     ) {
-        const canvas: HTMLCanvasElement = document.getElementById(canvasId) as HTMLCanvasElement;
+        const canvas: Canvas = createCanvas(canvasWidth, canvasHeight);
         if (!canvas) throw new Error(`Canvas with id '${canvasId}' not found`);
         
 
-        const ctx: CanvasRenderingContext2D | null = canvas.getContext('2d');
+        const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
         if (!ctx) throw new Error('Could not get 2D context from canvas');
         
         this.renderer = new CanvasRenderer(ctx);
 
-        this.canvasWidth = canvas.width;
-        this.canvasHeight = canvas.height;
+        this.canvasWidth = canvasWidth;
+        this.canvasHeight = canvasHeight;
 
         this.collisionDetection = new CollisionDetection(this.canvasWidth, this.canvasHeight);
     }
 
     public run(): void {
-        let lastFrameTime: number = 0;
-        
-        const simulationLoop = (currentTime: number) => {
-            if (lastFrameTime === 0) lastFrameTime = currentTime;
+        let lastFrameTime: number = Date.now();
 
-            const deltaTime: number = (currentTime - lastFrameTime) / 1000;
+        setInterval(() => {
+            const currentTime = Date.now();
+            const deltaTime = (currentTime - lastFrameTime) / 1000;
             lastFrameTime = currentTime;
 
-            if(deltaTime > 0) this.fixedTimeStepUpdate(deltaTime);
-            
-            requestAnimationFrame(simulationLoop);
-        }
-
-        requestAnimationFrame(simulationLoop);
+            if (deltaTime > 0) this.fixedTimeStepUpdate(deltaTime);
+        }, 1000 / 60);
     }
 
     private fixedTimeStepUpdate(deltaTime: number) {

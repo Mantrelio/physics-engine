@@ -1,4 +1,5 @@
 import { BaseShapeRenderData, CircleRenderData, PolygonRenderData } from "../interfaces/render-data.interface";
+import { CanvasRenderingContext2D } from "canvas";
 
 export class ShapeDrawer {
     static draw(ctx: CanvasRenderingContext2D, renderData: BaseShapeRenderData): void {

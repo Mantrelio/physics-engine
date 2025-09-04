@@ -3,6 +3,7 @@ import { RigidBody } from "../rigid-bodies/abstracts/rigid-body.abstract";
 import { WorldOptions } from "../world/types/world-options";
 import { GizmoDrawer } from "./drawers/gizmo-drawer";
 import { ShapeDrawer } from "./drawers/shape-drawer";
+import { CanvasRenderingContext2D } from "canvas";
 
 export class CanvasRenderer {
     constructor(

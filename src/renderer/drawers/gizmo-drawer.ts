@@ -1,5 +1,6 @@
 import { QuadtreeNode } from "../../collisions/data-structures/quadtree-node";
 import { AABBRenderData } from "../interfaces/render-data.interface";
+import { CanvasRenderingContext2D } from "canvas";
 
 export class GizmoDrawer {
     static drawAABB(ctx: CanvasRenderingContext2D, data: AABBRenderData): void {
