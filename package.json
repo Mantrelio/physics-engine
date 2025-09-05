@@ -18,6 +18,9 @@
   "homepage": "https://github.com/Mantrelio/physics-engine#readme",
   "devDependencies": {
     "@types/node": "^24.1.0",
+    "canvas": "^3.2.0",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.9.2",
     "vite": "^7.0.6"
   }
