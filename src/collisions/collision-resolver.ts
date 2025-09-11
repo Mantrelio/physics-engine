@@ -8,7 +8,7 @@ export class CollisionResolver {
         const { objectA, objectB, penetrationDepth, collisionNormal, contactPoints } = collisionData;
 
         this.resolveObjectPositions(objectA, objectB, penetrationDepth, collisionNormal);
-        
+
         for (const contactPoint of contactPoints) {
             const objectACenterToContactPoint: Vector = VectorMath.subtract(contactPoint.position, objectA.position);
             const objectBCenterToContactPoint: Vector = VectorMath.subtract(contactPoint.position, objectB.position);
@@ -19,7 +19,7 @@ export class CollisionResolver {
             );
 
             const velocityAlongNormalScalar: number = VectorMath.dot(relativeVelocity, collisionNormal);
-            if (velocityAlongNormalScalar > 0) return;
+            if (velocityAlongNormalScalar > 0) continue;
 
             const restitution: number = 0.8;
 
@@ -34,6 +34,28 @@ export class CollisionResolver {
             const impulseVector: Vector = VectorMath.multiply(collisionNormal, impulseScalar);
 
             this.resolveObjectVelocities(objectA, objectB, objectACenterToContactPoint, objectBCenterToContactPoint, impulseVector);
+
+            const tangentVector: Vector = VectorMath.subtract(
+                relativeVelocity,
+                VectorMath.multiply(collisionNormal, velocityAlongNormalScalar)
+            ).normalize();
+
+            if (tangentVector.magnitude() > 1e-8) {
+                const tangent: Vector = tangentVector.normalize();
+
+                const frictionCoefficient: number = 0.5;
+                const jt: number = -VectorMath.dot(relativeVelocity, tangent) / inverseMassSum / contactPoints.length;
+
+                const normalImpulse: number = Math.abs(impulseScalar);
+                const frictionImpulseScalar: number = Math.max(
+                    -frictionCoefficient * normalImpulse,
+                    Math.min(jt, frictionCoefficient * normalImpulse)
+                );
+
+                const frictionImpulse: Vector = VectorMath.multiply(tangent, frictionImpulseScalar);
+
+                this.resolveObjectVelocities(objectA, objectB, objectACenterToContactPoint, objectBCenterToContactPoint, frictionImpulse);
+            }
         }
     }
     
