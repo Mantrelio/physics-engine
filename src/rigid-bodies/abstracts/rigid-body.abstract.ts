@@ -37,7 +37,6 @@ export abstract class RigidBody {
     }
 
     private updatePosition(deltaTime: number): void {
-        console.log("Update position called");
         this.velocity.add(VectorMath.multiply(this.acceleration, deltaTime));
         this.position.add(VectorMath.multiply(this.velocity, deltaTime).multiply(100)).
             add(VectorMath.multiply(this.acceleration, deltaTime * deltaTime * 0.5).multiply(100));

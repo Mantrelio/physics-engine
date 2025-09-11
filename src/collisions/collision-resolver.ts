@@ -6,13 +6,16 @@ import { CollisionData } from "./types/collision-data.type";
 export class CollisionResolver {
     static execute(collisionData: CollisionData): void {
         const { objectA, objectB, penetrationDepth, collisionNormal, contactPoints } = collisionData;
+
+        this.resolveObjectPositions(objectA, objectB, penetrationDepth, collisionNormal);
+        
         for (const contactPoint of contactPoints) {
             const objectACenterToContactPoint: Vector = VectorMath.subtract(contactPoint.position, objectA.position);
             const objectBCenterToContactPoint: Vector = VectorMath.subtract(contactPoint.position, objectB.position);
 
             const relativeVelocity: Vector = VectorMath.subtract(
                 VectorMath.add(objectB.velocity, VectorMath.crossScalarVector(objectB.angularVelocity, objectBCenterToContactPoint)),
-                VectorMath.add(objectA.velocity, VectorMath.crossScalarVector(objectA.angularAcceleration, objectACenterToContactPoint))
+                VectorMath.add(objectA.velocity, VectorMath.crossScalarVector(objectA.angularVelocity, objectACenterToContactPoint))
             );
 
             const velocityAlongNormalScalar: number = VectorMath.dot(relativeVelocity, collisionNormal);
@@ -24,13 +27,12 @@ export class CollisionResolver {
             const torqueContributionB: number = VectorMath.cross(objectBCenterToContactPoint, collisionNormal);
 
             const inverseMassSum: number = objectA.inverseMass + objectB.inverseMass + 
-                torqueContributionA * torqueContributionB * objectA.inverseInertia +
-                torqueContributionA * torqueContributionB * objectB.inverseInertia;
+                (torqueContributionA * torqueContributionA) * objectA.inverseInertia +
+                (torqueContributionB * torqueContributionB) * objectB.inverseInertia;
 
             const impulseScalar: number = -(1 + restitution) * velocityAlongNormalScalar / inverseMassSum / contactPoints.length;
             const impulseVector: Vector = VectorMath.multiply(collisionNormal, impulseScalar);
 
-            this.resolveObjectPositions(objectA, objectB, penetrationDepth, collisionNormal);
             this.resolveObjectVelocities(objectA, objectB, objectACenterToContactPoint, objectBCenterToContactPoint, impulseVector);
         }
     }
@@ -48,7 +50,7 @@ export class CollisionResolver {
         const correction: Vector = VectorMath.multiply(collisionNormal, correctionMagnitude);       
 
         objectA.position.subtract(VectorMath.multiply(correction, objectA.inverseMass));
-        objectB.position.add(VectorMath.multiply(correction, objectA.inverseMass));
+        objectB.position.add(VectorMath.multiply(correction, objectB.inverseMass));
     }
 
     private static resolveObjectVelocities(

@@ -17,16 +17,17 @@ for(let i = 0; i < 20; i++) {
  	const randomXVelocity = 1;
 	const randomYVelocity = 0;
 
-	const square = new Square(randomSize, randomMass, new Vector(100 + randomX, 3000 + randomX), new Vector(3, 0));
+	const square1 = new Square(randomSize, randomMass, new Vector(50 + randomX, 1000), new Vector(0, 0));
+	const square2 = new Square(randomSize, randomMass, new Vector(randomX, 500), new Vector(0, 0));
 	const rectangle2 = new Polygon(4, 60, randomMass, new Vector(randomX2, 300), new Vector(3, randomYVelocity));
 	const rectangle3 = new Polygon(3, 40, randomMass, new Vector(randomX2, 300), new Vector(2, randomYVelocity));
 	const rectangle4 = new Polygon(5, 40, randomMass, new Vector(randomX2, 300), new Vector(2, randomYVelocity));
 	const circle = new Circle(new Vector(randomX, randomY), randomRadius, randomMass, new Vector(-3, randomYVelocity));
 	// world.addObject(rectangle3);
-	world.addObject(square);
+	//world.addObject(square);
 	// world.addObject(rectangle4);
-	// world.addObject(square);
-	world.addObject(circle);
+	 world.addObject(circle);
+	 world.addObject(square2);
 }
 
 

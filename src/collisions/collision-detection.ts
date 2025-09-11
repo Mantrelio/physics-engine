@@ -39,7 +39,7 @@ export class CollisionDetection {
     public checkForCollision(worldObjects: RigidBody[]): void {
         const rootQuadrantNode: QuadtreeNode = this.createCollisionGrid(worldObjects);
 
-        const iterations: number = 1;
+        const iterations: number = 3;
 
         for (let i = 0; i < iterations; i++) {
             for (const object of worldObjects) {
@@ -50,8 +50,9 @@ export class CollisionDetection {
 
                     const collisionData: CollisionData | null =  this.detectCollision(object, collider);
 
-                    if (collisionData) CollisionResolver.execute(collisionData);
-                    
+                    if (collisionData) {
+                        CollisionResolver.execute(collisionData);
+                    }
                 }
             }
         }
@@ -61,8 +62,7 @@ export class CollisionDetection {
         if (objectA instanceof Circle && objectB instanceof Polygon) return this.isCirclePolygonCollision(objectA, objectB);
         if (objectA instanceof Polygon && objectB instanceof Circle) return this.isCirclePolygonCollision(objectB, objectA);
         if (objectA instanceof Circle && objectB instanceof Circle) return this.isCircleCircleCollision(objectA, objectB);
-        if (objectA instanceof Polygon && objectB instanceof Polygon) return this.isPolygonPolygonCollision(objectA, objectB);
-
+        if (objectA instanceof Polygon && objectB instanceof Polygon) return this.isPolygonPolygonCollision(objectA, objectB);    
         return null;
     }
 
@@ -78,7 +78,7 @@ export class CollisionDetection {
 
             if (circleLimits.max < polygonLimits.min || circleLimits.min > polygonLimits.max) return null;
 
-            const axisPeneterationDepth: number = Math.min(circleLimits.max - polygonLimits.min, polygonLimits.max - circleLimits.min);
+            const axisPeneterationDepth: number = Math.min(circleLimits.max, polygonLimits.max) - Math.max(circleLimits.min, polygonLimits.min);
 
             if (minPeneterationDepth > axisPeneterationDepth) {
                 minPeneterationDepth = axisPeneterationDepth;
@@ -115,7 +115,7 @@ export class CollisionDetection {
 
             if (polygonALimits.max < polygonBLimits.min || polygonALimits.min > polygonBLimits.max) return null;
 
-            const axisPeneterationDepth: number = Math.min(polygonALimits.max - polygonBLimits.min, polygonBLimits.max - polygonALimits.min);
+            const axisPeneterationDepth: number = Math.min(polygonALimits.max, polygonBLimits.max) - Math.max(polygonALimits.min, polygonBLimits.min); 
 
             if (minPeneterationDepth > axisPeneterationDepth) {
                 minPeneterationDepth = axisPeneterationDepth;
@@ -178,15 +178,12 @@ export class CollisionDetection {
 
     private projectPolygonOnAxis(polygon: Polygon, axis: Vector): Interval {
         const vertices: Vector[] = polygon.worldVertices;
-
         let min = VectorMath.dot(vertices[0], axis);
         let max = min;
 
         for (const vertex of vertices) {
             const projection = VectorMath.dot(vertex, axis);
-
             if (projection < min) min = projection;
-
             if (projection > max) max = projection;
         }
 
@@ -266,6 +263,14 @@ export class CollisionDetection {
             contactPoints = this.clipIncidentEdge(clippedIncidentEdge, rightPlane);
         }
 
+        if (contactPoints.length === 0) {
+            const mid = VectorMath.multiply(
+                VectorMath.add(referenceEdge.start, referenceEdge.end),
+                0.5
+            );
+            contactPoints = [{ position: mid }];
+        }
+
         const projectedContactPoints: ContactPoint[] = contactPoints.map(contactPoint => 
             this.projectPointOnReferenceFace(contactPoint, referenceEdge.start, collisionNormal)
         )
@@ -306,8 +311,14 @@ export class CollisionDetection {
             inwardNormal = VectorMath.multiply(inwardNormal, -1);
         }
 
-        const leftPlane: Plane = { point: referenceEdge.start, normal: inwardNormal };
-        const rightPlane: Plane = { point: referenceEdge.end, normal: VectorMath.multiply(inwardNormal, -1) };
+        const leftPlane: Plane = { 
+            point: referenceEdge.start, 
+            normal: tangent
+        };
+        const rightPlane: Plane = { 
+            point: referenceEdge.end, 
+            normal: VectorMath.multiply(tangent, -1)
+        };
 
         return [leftPlane, rightPlane];
     }
@@ -318,8 +329,8 @@ export class CollisionDetection {
         const startDistanceFromPlane: number = VectorMath.dot(plane.normal, VectorMath.subtract(incidentEdge.start, plane.point));
         const endDistanceFromPlane: number = VectorMath.dot(plane.normal, VectorMath.subtract(incidentEdge.end, plane.point));
 
-        const isStartInsidePlane: boolean = startDistanceFromPlane >= 0;
-        const isEndInsidePlane: boolean = endDistanceFromPlane >= 0;
+        const isStartInsidePlane: boolean = startDistanceFromPlane >= -1e-8;
+        const isEndInsidePlane: boolean = endDistanceFromPlane >= -1e-8;
 
         if (isStartInsidePlane) intersectingPoints.push({ position: incidentEdge.start });
         if (isEndInsidePlane) intersectingPoints.push({ position: incidentEdge.end });
