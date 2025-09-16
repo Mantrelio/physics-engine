@@ -18,9 +18,6 @@ export class World {
     private accumulator: number = 0;
     private readonly physicsStepsLimit: number = 4;
 
-    private visibleAABB: boolean = true;
-    private visibleCollisionGrid: boolean = true;
-
     private readonly constraintHandlers: Record<Shape, (rigidBody: RigidBody) => void> = {
         [Shape.CIRCLE]: (rigidBody: RigidBody) => {
             const restitution: number = 0.8;
@@ -73,8 +70,10 @@ export class World {
 
     constructor(
         private readonly airDensity: number,
-        private readonly gravityActive: boolean,
-        private readonly dragActive: boolean,
+        private readonly gravityActive: boolean = true,
+        private readonly dragActive: boolean = true,
+        private visibleAABB: boolean = false,
+        private visibleCollisionGrid: boolean = false,
         canvasId: string,
     ) {
         const canvas: HTMLCanvasElement = document.getElementById(canvasId) as HTMLCanvasElement;
