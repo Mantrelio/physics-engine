@@ -73,12 +73,13 @@ export class World {
 
     constructor(
         private readonly airDensity: number,
+        private readonly gravityActive: boolean,
+        private readonly dragActive: boolean,
         canvasId: string,
     ) {
         const canvas: HTMLCanvasElement = document.getElementById(canvasId) as HTMLCanvasElement;
         if (!canvas) throw new Error(`Canvas with id '${canvasId}' not found`);
         
-
         const ctx: CanvasRenderingContext2D | null = canvas.getContext('2d');
         if (!ctx) throw new Error('Could not get 2D context from canvas');
         
@@ -128,8 +129,8 @@ export class World {
 
     private updatePhysics(deltaTime: number) {
         this.objects.forEach(object => {
-            this.applyGravity(object);
-            this.applyDrag(object);
+            if (this.gravityActive) this.applyGravity(object);
+            if (this.dragActive) this.applyDrag(object);
             object.updateDynamics(deltaTime);
             this.applyConstraints(object);
         });
