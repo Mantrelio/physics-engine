@@ -45,7 +45,7 @@ export abstract class RigidBody {
 
     private updateRotation(deltaTime: number): void {
         this.angularVelocity += this.angularAcceleration * deltaTime;
-        this.rotationAngle += this.angularVelocity * deltaTime;
+        this.rotationAngle += this.angularVelocity * deltaTime * 100;
         this.angularAcceleration = 0;
     }
 
