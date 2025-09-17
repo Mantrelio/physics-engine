@@ -4,7 +4,7 @@ import { Square } from "../../rigid-bodies/square";
 import { Vector } from "../../vectors/entities/vector";
 import { World } from "../../world/world";
 
-const world = new World(1.225, true, true,true, true ,'gravity'); 
+const world = new World(1.225, true, true, true, true ,'gravity'); 
 
 for(let i = 0; i < 20; i++) {
 	const randomX = Math.random() * world.canvasHeight;
