@@ -1,6 +1,6 @@
 # physics-engine
 
-Physics engine library built with TypeScript is designed for basic physics simulations on your web application built. 
+Physics engine library built with TypeScript that is designed for basic physics simulations on your web application built. 
 
 ## Features
 
