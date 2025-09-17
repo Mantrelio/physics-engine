@@ -1,4 +1,5 @@
 import { CollisionDetection } from "../collisions/collision-detection";
+import { WorldOptions } from "../physics-engine/interfaces/physics-engine-options";
 import { CanvasRenderer } from "../renderer/canvas-renderer";
 import { RigidBody } from "../rigid-bodies/abstracts/rigid-body.abstract";
 import { Circle } from "../rigid-bodies/circle";
@@ -17,6 +18,12 @@ export class World {
     private readonly fixedTimeStep: number = 1/60;
     private accumulator: number = 0;
     private readonly physicsStepsLimit: number = 4;
+
+    private readonly airDensity: number;
+    private readonly gravityActive: boolean;
+    private readonly dragActive: boolean;
+    private visibleAABB: boolean;
+    private visibleCollisionGrid: boolean;
 
     private readonly constraintHandlers: Record<Shape, (rigidBody: RigidBody) => void> = {
         [Shape.CIRCLE]: (rigidBody: RigidBody) => {
@@ -68,26 +75,33 @@ export class World {
         'polygon': 0.5
     }
 
-    constructor(
-        private readonly airDensity: number,
-        private readonly gravityActive: boolean = true,
-        private readonly dragActive: boolean = true,
-        private visibleAABB: boolean = false,
-        private visibleCollisionGrid: boolean = false,
-        canvasId: string,
-    ) {
-        const canvas: HTMLCanvasElement = document.getElementById(canvasId) as HTMLCanvasElement;
-        if (!canvas) throw new Error(`Canvas with id '${canvasId}' not found`);
-        
+    constructor(options: WorldOptions) {
+        const canvas: HTMLCanvasElement = this.resolveCanvas(options.canvas);
         const ctx: CanvasRenderingContext2D | null = canvas.getContext('2d');
         if (!ctx) throw new Error('Could not get 2D context from canvas');
         
         this.renderer = new CanvasRenderer(ctx);
-
         this.canvasWidth = canvas.width;
         this.canvasHeight = canvas.height;
 
+        this.gravityActive = options.enableGravity ?? true;
+        this.dragActive = options.enableDrag ?? true;
+        this.airDensity = options.airDensity ?? 0;
+
+        this.visibleAABB = options.enableAABBVisualization ?? false;
+        this.visibleCollisionGrid = options.enableCollisionGridVisualization ?? false;
+
         this.collisionDetection = new CollisionDetection(this.canvasWidth, this.canvasHeight);
+    }
+
+    private resolveCanvas(canvas: HTMLCanvasElement | string): HTMLCanvasElement {
+        if (typeof canvas === 'string') {
+            const element = document.getElementById(canvas) as HTMLCanvasElement
+            if (!element) throw new Error(`Canvas with id '${canvas}' not found`);
+            return element;
+        }
+
+        return canvas as HTMLCanvasElement;
     }
 
     public run(): void {
