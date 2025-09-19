@@ -1,18 +1,17 @@
-import { PhysicsEngine } from "../../physics-engine/physics-engine";
-import { RigidBodyFactory } from "../../rigid-bodies/factories/rigidbody-factory";
-import { Vector } from "../../vectors/entities/vector";
+import { PhysicsEngine } from "../physics-engine/physics-engine";
+import { RigidBodyFactory } from "../rigid-bodies/factories/rigidbody-factory";
+import { Vector } from "../vectors/entities/vector";
 
 const physicsEngine = new PhysicsEngine({ 
     canvas: 'gravity',
     enableGravity: false,
+    enableAABBVisualization: true,
+    enableCollisionGridVisualization: true
 }); 
 
-for(let i = 0; i < 100; i++) {
+for(let i = 0; i < 500; i++) {
     const randomX = Math.random() * physicsEngine.world.canvasWidth;
     const randomY = Math.random() * physicsEngine.world.canvasHeight;
-    const randomMass = 1;
-    const randomRadius = 20;
-    const randomSize = 20;
     const min = -10;
     const max = 10;
     const randomXVelocity = Math.random() * (max - min) + min;
@@ -20,8 +19,8 @@ for(let i = 0; i < 100; i++) {
 
     const circle = RigidBodyFactory.circle({
         position: new Vector(randomX, randomY),
-        mass: randomMass,
-        radius: randomRadius,
+        mass: 1,
+        radius: 20,
         velocity: new Vector(randomXVelocity, randomYVelocity)
     });
 

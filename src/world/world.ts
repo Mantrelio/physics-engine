@@ -165,10 +165,16 @@ export class World {
     }
 
     private applyDrag(object: RigidBody): void {
-        if (object.velocity.x === 0 && object.velocity.y === 0) return;
-            
-        const dragDirectionalVector: Vector = VectorMath.normalize(object.velocity).multiply(-1);
-        const dragForce: Vector = VectorMath.multiply(dragDirectionalVector, VectorMath.magnitude(object.velocity)*this.dragCoefficients[object.shape] * this.airDensity * 0.5); 
-        object.applyForce(dragForce);
+        if (object.velocity.x != 0 && object.velocity.y != 0) {
+            const dragDirectionalVector: Vector = VectorMath.normalize(object.velocity).multiply(-1);
+            const dragForce: Vector = VectorMath.multiply(dragDirectionalVector, VectorMath.magnitude(object.velocity)*this.dragCoefficients[object.shape] * this.airDensity * 0.5); 
+            object.applyForce(dragForce);
+        }
+
+        if (object.angularVelocity != 0) {
+            const angularDragCoefficient = 0.1;
+            const angularDragTorque = -object.angularVelocity * angularDragCoefficient;
+            object.applyTorque(angularDragTorque);
+        }
     }
 }
