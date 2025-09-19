@@ -12,8 +12,8 @@ export class World {
     private objects: RigidBody[] = [];
     private renderer: CanvasRenderer;
     private collisionDetection: CollisionDetection;
-    public readonly canvasWidth: number;
-    public readonly canvasHeight: number;
+    private readonly canvasWidth: number;
+    private readonly canvasHeight: number;
 
     private readonly fixedTimeStep: number = 1/60;
     private accumulator: number = 0;
