@@ -2,24 +2,35 @@ import { AABB } from "../../collisions/axis-aligned-bounding-box";
 import { AABBRenderData, BaseShapeRenderData } from "../../renderer/interfaces/render-data.interface";
 import { Vector } from "../../vectors/entities/vector";
 import { VectorMath } from "../../vectors/vector-math";
+import { Circle } from "../circle";
 import { Shape } from "../enums/shape.enum";
+import { CircleConfig, PolygonConfig } from "../interfaces/shape-config";
+import { ShapeConstructorOptions } from "../interfaces/shape-constructor-options";
+import { Polygon } from "../polygon";
 
 export abstract class RigidBody {
     private static nextId: number = 1;
     public readonly id: number;
+    public position: Vector;
+    public readonly mass: number;
+    public readonly shape: Shape;
+    public velocity: Vector;
+    protected acceleration: Vector = VectorMath.zero();
+    public angularVelocity: number;
+    public angularAcceleration: number = 0;
+    public rotationAngle: number = 0;
+    public readonly inertia: number;
 
-    constructor(
-        public position: Vector,
-        public velocity: Vector = new Vector(0, 0),
-        public readonly mass: number = Infinity,
-        public readonly shape: Shape,
-        public readonly inertia: number = Infinity,
-        public angularVelocity: number = 0,
-        public angularAcceleration: number = 0,
-        public rotationAngle: number = 0,
-        protected acceleration: Vector = new Vector(0, 0)
-    ) {
+    constructor(options: ShapeConstructorOptions) {
+        if (options.mass && options.mass <= 0) throw new Error('Rigid body mass must be greater than zero');
+
         this.id = RigidBody.nextId++;
+        this.position = options.position ?? VectorMath.zero();
+        this.velocity = options.velocity ?? VectorMath.zero();
+        this.mass = options.mass ?? 1;
+        this.shape = options.shape;
+        this.angularVelocity = options.angularVelocity ?? 0;
+        this.inertia = options.inertia;
     }
 
     public applyForce(force: Vector): void {

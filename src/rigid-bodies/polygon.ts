@@ -4,36 +4,29 @@ import { Vector } from "../vectors/entities/vector";
 import { VectorMath } from "../vectors/vector-math";
 import { RigidBody } from "./abstracts/rigid-body.abstract";
 import { Shape } from "./enums/shape.enum";
+import { PolygonConfig } from "./interfaces/shape-config";
 import { BoundingBox } from "./types/bounding-box.type";
 
 export class Polygon extends RigidBody {
     public vertices: Vector[] = [];
+    private readonly size: number;
 
-    constructor(
-            public readonly sideCount: number,
-            public readonly size: number,
-            mass: number,
-            position: Vector,   
-            velocity?: Vector, 
-            acceleration?: Vector,
-            angularAcceleration?: number,
-            angularVelocity?: number,
-            rotationAngle?: number
-    ) {
-        const inertia: number = 0.5 * mass * size * size * (Math.sin(Math.PI / sideCount) / (Math.PI / sideCount)); 
+    constructor(config: PolygonConfig) {
+        super({
+            position: config.position,
+            shape: Shape.POLYGON,
+            mass: config.mass,
+            velocity: config.velocity,
+            angularVelocity: config.angularVelocity,
+            inertia: 0.5 * (config.mass ?? 1) * config.size * config.size * (Math.sin(Math.PI / config.sideCount) / (Math.PI / config.sideCount)),
+        });
 
-        super(
-            position, 
-            velocity, 
-            mass, 
-            Shape.POLYGON, 
-            inertia, 
-            angularVelocity,
-            angularAcceleration, 
-            rotationAngle,
-            acceleration
-        );
+        this.size = config.size;
 
+        this.createVertices(config.sideCount, config.size);
+    }
+
+    private createVertices(sideCount: number, size: number): void {
         for (let i = 0; i < sideCount; i++) {
             const angle: number = (2 * Math.PI * i) / sideCount - Math.PI / 2;
 

@@ -1,35 +1,24 @@
-import { Vector } from "../vectors/entities/vector";
 import { RigidBody } from "./abstracts/rigid-body.abstract";
 import { Shape } from "./enums/shape.enum";
 import { CircleRenderData } from "../renderer/interfaces/render-data.interface";
 import { AABB } from "../collisions/axis-aligned-bounding-box";
+import { CircleConfig } from "./interfaces/shape-config";
 
 export class Circle extends RigidBody {
     public readonly color: string = this.generateRandomColor();
+    public readonly radius: number;
 
-    constructor(
-        position: Vector,
-        public readonly radius: number,
-        mass: number,   
-        velocity?: Vector, 
-        acceleration?: Vector,
-        angularVelocity?: number,
-        angularAcceleration?: number,
-        rotationAngle?: number,
-    ) {
-        const inertia: number = 1 / 2 * mass * radius * radius;
+    constructor(config: CircleConfig) {
+        super({
+            position: config.position,
+            shape: Shape.CIRCLE,
+            mass: config.mass,
+            velocity: config.velocity,
+            angularVelocity: config.angularVelocity,
+            inertia: 0.5 * (config.mass ?? 1) * config.radius * config.radius,
+        });
 
-        super(
-            position, 
-            velocity, 
-            mass,  
-            Shape.CIRCLE,
-            inertia,
-            angularVelocity,
-            angularAcceleration,
-            rotationAngle,
-            acceleration
-        );
+        this.radius = config.radius;
     }
 
     private generateRandomColor(): string {
