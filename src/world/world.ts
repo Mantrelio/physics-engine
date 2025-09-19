@@ -155,6 +155,10 @@ export class World {
         this.objects.push(object);
     }
 
+    public removeObject(object: RigidBody): void {
+        this.objects.filter(object => object !== object);
+    }
+
     public applyGravity(object: RigidBody): void {
         const gravityForce: Vector = new Vector(0, 9.8*object.mass); 
         object.applyForce(gravityForce);
@@ -176,5 +180,9 @@ export class World {
             const angularDragTorque = -object.angularVelocity * angularDragCoefficient;
             object.applyTorque(angularDragTorque);
         }
+    }
+
+    public get objectList(): RigidBody[] {
+        return this.objects;
     }
 }

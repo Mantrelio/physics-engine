@@ -10,8 +10,8 @@ const physicsEngine = new PhysicsEngine({
 }); 
 
 for(let i = 0; i < 500; i++) {
-    const randomX = Math.random() * physicsEngine.world.canvasWidth;
-    const randomY = Math.random() * physicsEngine.world.canvasHeight;
+    const randomX = Math.random() * 6000;
+    const randomY = Math.random() * 3000;
     const min = -10;
     const max = 10;
     const randomXVelocity = Math.random() * (max - min) + min;
@@ -24,9 +24,7 @@ for(let i = 0; i < 500; i++) {
         velocity: new Vector(randomXVelocity, randomYVelocity)
     });
 
-    physicsEngine.world.addObject(circle);
+    physicsEngine.addObject(circle);
 }
 
-
-
-physicsEngine.world.run();
+physicsEngine.start();

@@ -7,8 +7,8 @@ const physicsEngine = new PhysicsEngine({
 }); 
 
 for(let i = 0; i < 50; i++) {
-    const randomX = Math.random() * physicsEngine.world.canvasWidth;
-    const randomY = Math.random() * physicsEngine.world.canvasHeight;
+    const randomX = Math.random() * 6000;
+    const randomY = Math.random() * 3000;
 
     const circle = RigidBodyFactory.circle({
         position: [randomX, randomY],
@@ -16,9 +16,7 @@ for(let i = 0; i < 50; i++) {
         radius: 20,
     });
 
-    physicsEngine.world.addObject(circle);
+    physicsEngine.addObject(circle);
 }
 
-
-
-physicsEngine.world.run();
+physicsEngine.start();
