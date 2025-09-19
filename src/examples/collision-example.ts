@@ -18,7 +18,7 @@ for(let i = 0; i < 500; i++) {
     const randomYVelocity = 0;
 
     const circle = RigidBodyFactory.circle({
-        position: new Vector(randomX, randomY),
+        position: [randomX, randomY],
         mass: 1,
         radius: 20,
         velocity: new Vector(randomXVelocity, randomYVelocity)

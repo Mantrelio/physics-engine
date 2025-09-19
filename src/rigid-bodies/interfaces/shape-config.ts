@@ -1,7 +1,7 @@
 import { Vector } from "../../vectors/entities/vector";
 
 export interface ShapeConfig {
-    position: Vector;
+    position: [number, number];
     mass?: number;
     velocity?: Vector;
     angularVelocity?: number;

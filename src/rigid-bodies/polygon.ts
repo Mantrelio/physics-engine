@@ -13,7 +13,7 @@ export class Polygon extends RigidBody {
 
     constructor(config: PolygonConfig) {
         super({
-            position: config.position,
+            position: new Vector(config.position[0], config.position[1]),
             shape: Shape.POLYGON,
             mass: config.mass,
             velocity: config.velocity,

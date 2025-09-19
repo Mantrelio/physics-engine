@@ -11,7 +11,7 @@ for(let i = 0; i < 50; i++) {
     const randomY = Math.random() * physicsEngine.world.canvasHeight;
 
     const circle = RigidBodyFactory.circle({
-        position: new Vector(randomX, randomY),
+        position: [randomX, randomY],
         mass: 1,
         radius: 20,
     });

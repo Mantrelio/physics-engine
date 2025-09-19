@@ -3,6 +3,7 @@ import { Shape } from "./enums/shape.enum";
 import { CircleRenderData } from "../renderer/interfaces/render-data.interface";
 import { AABB } from "../collisions/axis-aligned-bounding-box";
 import { CircleConfig } from "./interfaces/shape-config";
+import { Vector } from "../vectors/entities/vector";
 
 export class Circle extends RigidBody {
     public readonly color: string = this.generateRandomColor();
@@ -10,7 +11,7 @@ export class Circle extends RigidBody {
 
     constructor(config: CircleConfig) {
         super({
-            position: config.position,
+            position: new Vector(config.position[0], config.position[1]),
             shape: Shape.CIRCLE,
             mass: config.mass,
             velocity: config.velocity,
