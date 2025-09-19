@@ -156,7 +156,7 @@ export class World {
     }
 
     public removeObject(object: RigidBody): void {
-        this.objects.filter(object => object !== object);
+        this.objects = this.objects.filter(obj => obj !== object);
     }
 
     public applyGravity(object: RigidBody): void {
