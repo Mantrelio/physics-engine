@@ -1,6 +1,6 @@
 # physics-engine
 
-Physics engine library built with TypeScript that is designed for basic physics simulations on your web application. 
+Lightweight physics engine library built with TypeScript that is designed for basic physics simulations on your web application. 
 
 ## Features
 
@@ -13,3 +13,20 @@ This physics engine uses an HTML `<canvas>` element as the rendering surface, wi
 - **Dynamics** are handled by Velocity Verlet integration to create realistic motion and response to forces.
 
 - Currently, the library supports only convex shapes and circles for **Rigid  bodies**.
+
+- Has built in gravity, drag forces.
+
+## API Documentation
+
+### Classes
+- `PhysicsEngine` - Main engine class
+- `Cirlce` - Circular rigid body
+- `Rectangle` - Rectangular rigid body
+- `Vector` - 2D vector object with mutating methods
+- `VectorMath` - Pure mathematical vector calculations
+
+### Factories
+- `RigidBodyFactory` - Create physics objects
+
+## Tech Stack
+Language: TypeScript 5.8.2
