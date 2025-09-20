@@ -1,6 +1,7 @@
 import { QuadtreeNode } from "../collisions/data-structures/quadtree-node";
 import { RigidBody } from "../rigid-bodies/abstracts/rigid-body.abstract";
-import { WorldOptions } from "../world/types/world-options";
+import { WorldRenderingOptions } from "../world/world-rendering-options.ts/world-rendering-options";
+
 import { GizmoDrawer } from "./drawers/gizmo-drawer";
 import { ShapeDrawer } from "./drawers/shape-drawer";
 
@@ -9,7 +10,7 @@ export class CanvasRenderer {
         private ctx: CanvasRenderingContext2D
     ) {}
 
-    public render(objects: RigidBody[], collisionGridRootQuadrant: QuadtreeNode, worldOptions?: WorldOptions): void {
+    public render(objects: RigidBody[], collisionGridRootQuadrant: QuadtreeNode, worldOptions?: WorldRenderingOptions): void {
         this.clear();
         
         objects.forEach(object => { 
