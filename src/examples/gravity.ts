@@ -6,16 +6,22 @@ const physicsEngine = new PhysicsEngine({
     canvas: 'gravity',
 }); 
 
-for(let i = 0; i < 50; i++) {
+for(let i = 0; i < 100; i++) {
     const randomX = Math.random() * 6000;
     const randomY = Math.random() * 3000;
 
     const circle = RigidBodyFactory.circle({
         position: [randomX, randomY],
-        mass: 1,
         radius: 20,
+        mass: 1
     });
 
+    const square = RigidBodyFactory.square({
+        position: [randomX, randomY],
+        size: 20,
+    });
+
+    physicsEngine.addObject(square);
     physicsEngine.addObject(circle);
 }
 

@@ -7,6 +7,8 @@ export class CollisionResolver {
     static execute(collisionData: CollisionData): void {
         const { objectA, objectB, penetrationDepth, collisionNormal, contactPoints } = collisionData;
 
+        if(objectA.inverseMass === 0 && objectB.inverseMass === 0) return;
+ 
         this.resolveObjectPositions(objectA, objectB, penetrationDepth, collisionNormal);
 
         for (const contactPoint of contactPoints) {

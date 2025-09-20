@@ -2,11 +2,8 @@ import { AABB } from "../../collisions/axis-aligned-bounding-box";
 import { AABBRenderData, BaseShapeRenderData } from "../../renderer/interfaces/render-data.interface";
 import { Vector } from "../../vectors/entities/vector";
 import { VectorMath } from "../../vectors/vector-math";
-import { Circle } from "../circle";
 import { Shape } from "../enums/shape.enum";
-import { CircleConfig, PolygonConfig } from "../interfaces/shape-config";
 import { ShapeConstructorOptions } from "../interfaces/shape-constructor-options";
-import { Polygon } from "../polygon";
 
 export abstract class RigidBody {
     private static nextId: number = 1;
@@ -27,18 +24,20 @@ export abstract class RigidBody {
         this.id = RigidBody.nextId++;
         this.position = options.position ?? VectorMath.zero();
         this.velocity = options.velocity ?? VectorMath.zero();
-        this.mass = options.mass ?? 1;
+        this.mass = options.mass ?? Infinity;
         this.shape = options.shape;
         this.angularVelocity = options.angularVelocity ?? 0;
         this.inertia = options.inertia;
     }
 
     public applyForce(force: Vector): void {
+        if (this.mass === Infinity) return;
         const producedAcceleration: Vector = VectorMath.divide(force, this.mass);
         this.acceleration.add(producedAcceleration);
     }
 
     public applyTorque(torque: number): void {
+        if (this.mass === Infinity) return;
         this.angularAcceleration += torque / this.inertia;
     }
 

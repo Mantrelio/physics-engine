@@ -18,7 +18,7 @@ export class Polygon extends RigidBody {
             mass: config.mass,
             velocity: config.velocity,
             angularVelocity: config.angularVelocity,
-            inertia: 0.5 * (config.mass ?? 1) * config.size * config.size * (Math.sin(Math.PI / config.sideCount) / (Math.PI / config.sideCount)),
+            inertia: 0.5 * (config.mass ?? Infinity) * config.size * config.size * (Math.sin(Math.PI / config.sideCount) / (Math.PI / config.sideCount)),
         });
 
         this.size = config.size;
