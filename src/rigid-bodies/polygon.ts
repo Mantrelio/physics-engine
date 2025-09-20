@@ -9,7 +9,6 @@ import { BoundingBox } from "./types/bounding-box.type";
 
 export class Polygon extends RigidBody {
     public vertices: Vector[] = [];
-    private readonly size: number;
 
     constructor(config: PolygonConfig) {
         super({
@@ -21,12 +20,10 @@ export class Polygon extends RigidBody {
             inertia: 0.5 * (config.mass ?? Infinity) * config.size * config.size * (Math.sin(Math.PI / config.sideCount) / (Math.PI / config.sideCount)),
         });
 
-        this.size = config.size;
-
         this.createVertices(config.sideCount, config.size);
     }
-
-    private createVertices(sideCount: number, size: number): void {
+    
+    protected createVertices(sideCount: number, size: number): void {
         for (let i = 0; i < sideCount; i++) {
             const angle: number = (2 * Math.PI * i) / sideCount - Math.PI / 2;
 
@@ -42,7 +39,6 @@ export class Polygon extends RigidBody {
             type: this.shape,
             x: this.position.x,
             y: this.position.y,
-            size: this.size,
             vertices: this.worldVertices
         };
     }
