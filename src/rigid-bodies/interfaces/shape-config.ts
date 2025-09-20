@@ -19,3 +19,8 @@ export interface PolygonConfig extends ShapeConfig {
 export interface SquareConfig extends ShapeConfig {
     size: number;
 }
+
+export interface RectangleConfig extends ShapeConfig {
+    width: number;
+    height: number;
+}

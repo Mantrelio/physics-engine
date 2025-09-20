@@ -1,6 +1,7 @@
 import { Circle } from "../circle";
-import { CircleConfig, PolygonConfig, SquareConfig } from "../interfaces/shape-config";
+import { CircleConfig, PolygonConfig, RectangleConfig, SquareConfig } from "../interfaces/shape-config";
 import { Polygon } from "../polygon";
+import { Rectangle } from "../rectangle";
 import { Square } from "../square";
 
 export class RigidBodyFactory {
@@ -20,5 +21,11 @@ export class RigidBodyFactory {
     static square(config: SquareConfig): Polygon {
         if (config.size <= 0) throw new Error('Polygon size must be positive');
         return new Square(config);
+    }
+
+    static rectangle(config: RectangleConfig) {
+        if (config.width <= 0) throw new Error('Rectangle width must be positive');
+        if (config.height <= 0) throw new Error('Rectangle height must be positive');
+        return new Rectangle(config);
     }
 }
