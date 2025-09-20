@@ -13,7 +13,6 @@ export interface CircleRenderData extends BaseShapeRenderData {
 }
 
 export interface PolygonRenderData extends BaseShapeRenderData {
-    size: number;
     vertices: Vector[];
 }
 
