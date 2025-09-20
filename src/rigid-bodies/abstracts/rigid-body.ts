@@ -3,7 +3,7 @@ import { AABBRenderData, BaseShapeRenderData } from "../../renderer/interfaces/r
 import { Vector } from "../../vectors/entities/vector";
 import { VectorMath } from "../../vectors/vector-math";
 import { Shape } from "../enums/shape.enum";
-import { ShapeConstructorOptions } from "../interfaces/shape-constructor-options";
+import { ShapeConstructorParameters } from "../interfaces/shape-constructor-parameters";
 
 export abstract class RigidBody {
     private static nextId: number = 1;
@@ -18,7 +18,7 @@ export abstract class RigidBody {
     public rotationAngle: number = 0;
     public readonly inertia: number;
 
-    constructor(options: ShapeConstructorOptions) {
+    constructor(options: ShapeConstructorParameters) {
         if (options.mass && options.mass <= 0) throw new Error('Rigid body mass must be greater than zero');
 
         this.id = RigidBody.nextId++;

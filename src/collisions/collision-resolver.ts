@@ -1,4 +1,4 @@
-import { RigidBody } from "../rigid-bodies/abstracts/rigid-body.abstract";
+import { RigidBody } from "../rigid-bodies/abstracts/rigid-body";
 import { Vector } from "../vectors/entities/vector";
 import { VectorMath } from "../vectors/vector-math";
 import { CollisionData } from "./types/collision-data.type";
@@ -6,7 +6,7 @@ import { CollisionData } from "./types/collision-data.type";
 export class CollisionResolver {
     static execute(collisionData: CollisionData): void {
         const { objectA, objectB, penetrationDepth, collisionNormal, contactPoints } = collisionData;
-
+        
         if(objectA.inverseMass === 0 && objectB.inverseMass === 0) return;
  
         this.resolveObjectPositions(objectA, objectB, penetrationDepth, collisionNormal);

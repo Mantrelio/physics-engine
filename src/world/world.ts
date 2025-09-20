@@ -1,10 +1,10 @@
 import { CollisionDetection } from "../collisions/collision-detection";
 import { WorldOptions } from "../physics-engine/interfaces/physics-engine-options";
 import { CanvasRenderer } from "../renderer/canvas-renderer";
-import { RigidBody } from "../rigid-bodies/abstracts/rigid-body.abstract";
+import { RigidBody } from "../rigid-bodies/abstracts/rigid-body";
 import { Circle } from "../rigid-bodies/circle";
 import { Shape } from "../rigid-bodies/enums/shape.enum";
-import { Polygon } from "../rigid-bodies/polygon";
+import { Polygon } from "../rigid-bodies/abstracts/polygon";
 import { Vector } from "../vectors/entities/vector";
 import { VectorMath } from "../vectors/vector-math";
 
@@ -130,7 +130,6 @@ export class World {
 
         while (this.accumulator >= this.fixedTimeStep && physicsStepsCount < this.physicsStepsLimit) {
             this.updatePhysics(this.fixedTimeStep);
-
             this.accumulator -= this.fixedTimeStep;
             physicsStepsCount++;
         }

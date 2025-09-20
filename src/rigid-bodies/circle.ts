@@ -1,4 +1,4 @@
-import { RigidBody } from "./abstracts/rigid-body.abstract";
+import { RigidBody } from "./abstracts/rigid-body";
 import { Shape } from "./enums/shape.enum";
 import { CircleRenderData } from "../renderer/interfaces/render-data.interface";
 import { AABB } from "../collisions/axis-aligned-bounding-box";

@@ -1,6 +1,6 @@
-import { RigidBody } from "../rigid-bodies/abstracts/rigid-body.abstract";
+import { RigidBody } from "../rigid-bodies/abstracts/rigid-body";
 import { Circle } from "../rigid-bodies/circle";
-import { Polygon } from "../rigid-bodies/polygon";
+import { Polygon } from "../rigid-bodies/abstracts/polygon";
 import { Vector } from "../vectors/entities/vector";
 import { VectorMath } from "../vectors/vector-math";
 import { AABB } from "./axis-aligned-bounding-box";

@@ -1,38 +1,27 @@
-import { AABB } from "../collisions/axis-aligned-bounding-box";
-import {  PolygonRenderData } from "../renderer/interfaces/render-data.interface";
-import { Vector } from "../vectors/entities/vector";
-import { VectorMath } from "../vectors/vector-math";
-import { RigidBody } from "./abstracts/rigid-body.abstract";
-import { Shape } from "./enums/shape.enum";
-import { PolygonConfig } from "./interfaces/shape-config";
-import { BoundingBox } from "./types/bounding-box.type";
+import { AABB } from "../../collisions/axis-aligned-bounding-box";
+import {  PolygonRenderData } from "../../renderer/interfaces/render-data.interface";
+import { Vector } from "../../vectors/entities/vector";
+import { VectorMath } from "../../vectors/vector-math";
+import { RigidBody } from "./rigid-body";
+import { Shape } from "../enums/shape.enum";
+import { PolygonConstructorParameters } from "../interfaces/shape-constructor-parameters";
+import { BoundingBox } from "../types/bounding-box.type";
 
-export class Polygon extends RigidBody {
+export abstract class Polygon extends RigidBody {
     public vertices: Vector[] = [];
 
-    constructor(config: PolygonConfig) {
+    constructor(parameters: PolygonConstructorParameters) {
         super({
-            position: new Vector(config.position[0], config.position[1]),
+            position: parameters.position,
             shape: Shape.POLYGON,
-            mass: config.mass,
-            velocity: config.velocity,
-            angularVelocity: config.angularVelocity,
-            inertia: 0.5 * (config.mass ?? Infinity) * config.size * config.size * (Math.sin(Math.PI / config.sideCount) / (Math.PI / config.sideCount)),
+            mass: parameters.mass,
+            velocity: parameters.velocity,
+            angularVelocity: parameters.angularVelocity,
+            inertia: parameters.inertia,
         });
-
-        this.createVertices(config.sideCount, config.size);
     }
     
-    protected createVertices(sideCount: number, size: number): void {
-        for (let i = 0; i < sideCount; i++) {
-            const angle: number = (2 * Math.PI * i) / sideCount - Math.PI / 2;
-
-            this.vertices.push(new Vector(
-                size * Math.cos(angle),
-                size * Math.sin(angle)
-            ));
-        }
-    }
+    protected abstract createVertices(): void;
 
     public getRenderData(): PolygonRenderData {
         return {

@@ -1,4 +1,4 @@
-import { RigidBody } from "../rigid-bodies/abstracts/rigid-body.abstract";
+import { RigidBody } from "../rigid-bodies/abstracts/rigid-body";
 import { World } from "../world/world";
 import { WorldOptions } from "./interfaces/physics-engine-options";
 

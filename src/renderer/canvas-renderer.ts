@@ -1,5 +1,5 @@
 import { QuadtreeNode } from "../collisions/data-structures/quadtree-node";
-import { RigidBody } from "../rigid-bodies/abstracts/rigid-body.abstract";
+import { RigidBody } from "../rigid-bodies/abstracts/rigid-body";
 import { WorldRenderingOptions } from "../world/world-rendering-options.ts/world-rendering-options";
 
 import { GizmoDrawer } from "./drawers/gizmo-drawer";

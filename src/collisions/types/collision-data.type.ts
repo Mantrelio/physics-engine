@@ -1,4 +1,4 @@
-import { RigidBody } from "../../rigid-bodies/abstracts/rigid-body.abstract";
+import { RigidBody } from "../../rigid-bodies/abstracts/rigid-body";
 import { Vector } from "../../vectors/entities/vector";
 import { ContactPoint } from "./contact-point";
 
