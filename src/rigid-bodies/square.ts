@@ -1,26 +1,25 @@
 import { Vector } from "../vectors/entities/vector";
+import { SquareConfig } from "./interfaces/shape-config";
 import { Polygon } from "./polygon";
 
 export class Square extends Polygon {
     public vertices: Vector[] = [];
     
-    constructor(
-            public readonly size: number,
-            mass: number,
-            position: Vector,   
-            velocity?: Vector, 
-            acceleration?: Vector,
-            angularAcceleration?: number,
-            angularVelocity?: number,
-            rotationAngle?: number
-    ) {
-        super(4, size, mass, position, velocity, acceleration, angularAcceleration, angularVelocity, rotationAngle);
+    constructor(config: SquareConfig) {
+        super({
+            size: config.size,
+            sideCount: 4,
+            position: [config.position[0], config.position[1]],
+            mass: config.mass,
+            velocity: config.velocity,
+            angularVelocity: config.angularVelocity,
+        });
 
         this.vertices = [
-            new Vector(-size, -size),
-            new Vector(size, -size),
-            new Vector(size, size),
-            new Vector(-size, size)
+            new Vector(-config.size, -config.size),
+            new Vector(config.size, -config.size),
+            new Vector(config.size, config.size),
+            new Vector(-config.size, config.size)
         ];
     }
 }

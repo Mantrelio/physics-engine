@@ -15,3 +15,7 @@ export interface PolygonConfig extends ShapeConfig {
     sideCount: number;
     size: number;
 }
+
+export interface SquareConfig extends ShapeConfig {
+    size: number;
+}

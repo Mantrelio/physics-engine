@@ -1,6 +1,7 @@
 import { Circle } from "../circle";
-import { CircleConfig, PolygonConfig } from "../interfaces/shape-config";
+import { CircleConfig, PolygonConfig, SquareConfig } from "../interfaces/shape-config";
 import { Polygon } from "../polygon";
+import { Square } from "../square";
 
 export class RigidBodyFactory {
     static circle(config: CircleConfig): Circle {
@@ -14,5 +15,10 @@ export class RigidBodyFactory {
         if (config.sideCount < 3) throw new Error('Polygon side count must be greater than 2');
 
         return new Polygon(config);
+    }
+
+    static square(config: SquareConfig): Polygon {
+        if (config.size <= 0) throw new Error('Polygon size must be positive');
+        return new Square(config);
     }
 }
