@@ -1,6 +1,6 @@
-import { RigidBody } from "../rigid-bodies/abstracts/rigid-body";
-import { World } from "../world/world";
-import { WorldOptions } from "./interfaces/physics-engine-options";
+import { RigidBody } from "../rigid-bodies/abstracts/rigid-body.js";
+import { World } from "../world/world.js";
+import { WorldOptions } from "./interfaces/physics-engine-options.js";
 
 export class PhysicsEngine {
     private world: World;

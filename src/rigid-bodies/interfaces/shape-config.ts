@@ -1,4 +1,4 @@
-import { Vector } from "../../vectors/entities/vector";
+import { Vector } from "../../vectors/entities/vector.js";
 
 export interface ShapeConfig {
     position: [number, number];

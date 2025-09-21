@@ -1,6 +1,6 @@
-import { RigidBody } from "../../rigid-bodies/abstracts/rigid-body";
-import { Vector } from "../../vectors/entities/vector";
-import { AABB } from "../axis-aligned-bounding-box";
+import { RigidBody } from "../../rigid-bodies/abstracts/rigid-body.js";
+import { Vector } from "../../vectors/entities/vector.js";
+import { AABB } from "../axis-aligned-bounding-box.js";
 
 export class QuadtreeNode {
     public childNodes: QuadtreeNode[] = [];

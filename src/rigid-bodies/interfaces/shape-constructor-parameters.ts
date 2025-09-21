@@ -1,5 +1,5 @@
-import { Vector } from "../../vectors/entities/vector";
-import { Shape } from "../enums/shape.enum";
+import { Vector } from "../../vectors/entities/vector.js";
+import { Shape } from "../enums/shape.enum.js";
 
 export interface ShapeConstructorParameters {
     position: Vector;

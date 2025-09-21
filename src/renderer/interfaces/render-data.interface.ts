@@ -1,5 +1,5 @@
-import { Shape } from "../../rigid-bodies/enums/shape.enum"
-import { Vector } from "../../vectors/entities/vector";
+import { Shape } from "../../rigid-bodies/enums/shape.enum.js"
+import { Vector } from "../../vectors/entities/vector.js";
 
 export interface BaseShapeRenderData {
     type: Shape;

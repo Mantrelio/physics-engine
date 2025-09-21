@@ -1,7 +1,7 @@
-import { RigidBody } from "../rigid-bodies/abstracts/rigid-body";
-import { Vector } from "../vectors/entities/vector";
-import { VectorMath } from "../vectors/vector-math";
-import { CollisionData } from "./types/collision-data.type";
+import { RigidBody } from "../rigid-bodies/abstracts/rigid-body.js";
+import { Vector } from "../vectors/entities/vector.js";
+import { VectorMath } from "../vectors/vector-math.js";
+import { CollisionData } from "./types/collision-data.type.js";
 
 export class CollisionResolver {
     static execute(collisionData: CollisionData): void {

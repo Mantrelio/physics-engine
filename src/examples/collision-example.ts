@@ -1,6 +1,6 @@
-import { PhysicsEngine } from "../physics-engine/physics-engine";
-import { RigidBodyFactory } from "../rigid-bodies/factories/rigidbody-factory";
-import { Vector } from "../vectors/entities/vector";
+import { PhysicsEngine } from "../physics-engine/physics-engine.js";
+import { RigidBodyFactory } from "../rigid-bodies/factories/rigidbody-factory.js";
+import { Vector } from "../vectors/entities/vector.js";
 
 const physicsEngine = new PhysicsEngine({ 
     canvas: 'gravity',

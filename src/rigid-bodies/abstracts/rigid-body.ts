@@ -1,9 +1,9 @@
-import { AABB } from "../../collisions/axis-aligned-bounding-box";
-import { AABBRenderData, BaseShapeRenderData } from "../../renderer/interfaces/render-data.interface";
-import { Vector } from "../../vectors/entities/vector";
-import { VectorMath } from "../../vectors/vector-math";
-import { Shape } from "../enums/shape.enum";
-import { ShapeConstructorParameters } from "../interfaces/shape-constructor-parameters";
+import { AABB } from "../../collisions/axis-aligned-bounding-box.js";
+import { AABBRenderData, BaseShapeRenderData } from "../../renderer/interfaces/render-data.interface.js";
+import { Vector } from "../../vectors/entities/vector.js";
+import { VectorMath } from "../../vectors/vector-math.js";
+import { Shape } from "../enums/shape.enum.js";
+import { ShapeConstructorParameters } from "../interfaces/shape-constructor-parameters.js";
 
 export abstract class RigidBody {
     private static nextId: number = 1;

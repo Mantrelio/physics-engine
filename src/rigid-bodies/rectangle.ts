@@ -1,6 +1,6 @@
-import { Vector } from "../vectors/entities/vector";
-import { RectangleConfig } from "./interfaces/shape-config";
-import { Polygon } from "./abstracts/polygon";
+import { Vector } from "../vectors/entities/vector.js";
+import { RectangleConfig } from "./interfaces/shape-config.js";
+import { Polygon } from "./abstracts/polygon.js";
 
 export class Rectangle extends Polygon {
     private readonly width: number;

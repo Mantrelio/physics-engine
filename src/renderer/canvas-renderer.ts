@@ -1,9 +1,8 @@
-import { QuadtreeNode } from "../collisions/data-structures/quadtree-node";
-import { RigidBody } from "../rigid-bodies/abstracts/rigid-body";
-import { WorldRenderingOptions } from "../world/world-rendering-options.ts/world-rendering-options";
-
-import { GizmoDrawer } from "./drawers/gizmo-drawer";
-import { ShapeDrawer } from "./drawers/shape-drawer";
+import { QuadtreeNode } from "../collisions/data-structures/quadtree-node.js";
+import { RigidBody } from "../rigid-bodies/abstracts/rigid-body.js";
+import { WorldRenderingOptions } from "../world/world-rendering-options.ts/world-rendering-options.js";
+import { GizmoDrawer } from "./drawers/gizmo-drawer.js";
+import { ShapeDrawer } from "./drawers/shape-drawer.js";
 
 export class CanvasRenderer {
     constructor(

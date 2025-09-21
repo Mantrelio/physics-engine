@@ -1,4 +1,4 @@
-import { Vector } from "./entities/vector";
+import { Vector } from "./entities/vector.js";
 
 export class VectorMath {
     static add(...vectors: Vector[]): Vector {

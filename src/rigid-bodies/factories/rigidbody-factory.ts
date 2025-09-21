@@ -1,8 +1,8 @@
-import { Circle } from "../circle";
-import { CircleConfig, RectangleConfig, SquareConfig } from "../interfaces/shape-config";
-import { Polygon } from "../abstracts/polygon";
-import { Rectangle } from "../rectangle";
-import { Square } from "../square";
+import { Circle } from "../circle.js";
+import { CircleConfig, RectangleConfig, SquareConfig } from "../interfaces/shape-config.js";
+import { Polygon } from "../abstracts/polygon.js";
+import { Rectangle } from "../rectangle.js";
+import { Square } from "../square.js";
 
 export class RigidBodyFactory {
     static circle(config: CircleConfig): Circle {

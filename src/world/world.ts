@@ -1,12 +1,12 @@
-import { CollisionDetection } from "../collisions/collision-detection";
-import { WorldOptions } from "../physics-engine/interfaces/physics-engine-options";
-import { CanvasRenderer } from "../renderer/canvas-renderer";
-import { RigidBody } from "../rigid-bodies/abstracts/rigid-body";
-import { Circle } from "../rigid-bodies/circle";
-import { Shape } from "../rigid-bodies/enums/shape.enum";
-import { Polygon } from "../rigid-bodies/abstracts/polygon";
-import { Vector } from "../vectors/entities/vector";
-import { VectorMath } from "../vectors/vector-math";
+import { CollisionDetection } from "../collisions/collision-detection.js";
+import { WorldOptions } from "../physics-engine/interfaces/physics-engine-options.js";
+import { CanvasRenderer } from "../renderer/canvas-renderer.js";
+import { RigidBody } from "../rigid-bodies/abstracts/rigid-body.js";
+import { Circle } from "../rigid-bodies/circle.js";
+import { Shape } from "../rigid-bodies/enums/shape.enum.js";
+import { Polygon } from "../rigid-bodies/abstracts/polygon.js";
+import { Vector } from "../vectors/entities/vector.js";
+import { VectorMath } from "../vectors/vector-math.js";
 
 export class World {
     private objects: RigidBody[] = [];

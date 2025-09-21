@@ -1,16 +1,16 @@
-import { RigidBody } from "../rigid-bodies/abstracts/rigid-body";
-import { Circle } from "../rigid-bodies/circle";
-import { Polygon } from "../rigid-bodies/abstracts/polygon";
-import { Vector } from "../vectors/entities/vector";
-import { VectorMath } from "../vectors/vector-math";
-import { AABB } from "./axis-aligned-bounding-box";
-import { CollisionResolver } from "./collision-resolver";
-import { QuadtreeNode } from "./data-structures/quadtree-node";
-import { CollisionData } from "./types/collision-data.type";
-import { ContactPoint } from "./types/contact-point";
-import { Edge } from "./types/edge.type";
-import { Interval } from "./types/interval.type";
-import { Plane } from "./types/plane.type";
+import { RigidBody } from "../rigid-bodies/abstracts/rigid-body.js";
+import { Circle } from "../rigid-bodies/circle.js";
+import { Polygon } from "../rigid-bodies/abstracts/polygon.js";
+import { Vector } from "../vectors/entities/vector.js";
+import { VectorMath } from "../vectors/vector-math.js";
+import { AABB } from "./axis-aligned-bounding-box.js";
+import { CollisionResolver } from "./collision-resolver.js";
+import { QuadtreeNode } from "./data-structures/quadtree-node.js";
+import { CollisionData } from "./types/collision-data.type.js";
+import { ContactPoint } from "./types/contact-point.js";
+import { Edge } from "./types/edge.type.js";
+import { Interval } from "./types/interval.type.js";
+import { Plane } from "./types/plane.type.js";
 
 export class CollisionDetection {
     public rootQuadrantNode!: QuadtreeNode;

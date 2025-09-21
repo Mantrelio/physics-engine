@@ -1,9 +1,9 @@
-import { RigidBody } from "./abstracts/rigid-body";
-import { Shape } from "./enums/shape.enum";
-import { CircleRenderData } from "../renderer/interfaces/render-data.interface";
-import { AABB } from "../collisions/axis-aligned-bounding-box";
-import { CircleConfig } from "./interfaces/shape-config";
-import { Vector } from "../vectors/entities/vector";
+import { RigidBody } from "./abstracts/rigid-body.js";
+import { Shape } from "./enums/shape.enum.js";
+import { CircleRenderData } from "../renderer/interfaces/render-data.interface.js";
+import { AABB } from "../collisions/axis-aligned-bounding-box.js";
+import { CircleConfig } from "./interfaces/shape-config.js";
+import { Vector } from "../vectors/entities/vector.js";
 
 export class Circle extends RigidBody {
     public readonly color: string = this.generateRandomColor();
