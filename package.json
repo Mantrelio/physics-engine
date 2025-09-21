@@ -1,29 +1,31 @@
 {
-  "name": "physics-engine",
+  "name": "@mantrelio/physics-engine",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "A 2D physics engine for web applications",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Mantrelio/physics-engine.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Mantrimas Kasparavičius mantrimas.kasparavicius@gmail.com",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/Mantrelio/physics-engine/issues"
   },
   "homepage": "https://github.com/Mantrelio/physics-engine#readme",
   "devDependencies": {
-    "@types/jsdom": "^21.1.7",
-    "@types/node": "^24.1.0",
     "canvas": "^3.2.0",
-    "jsdom": "^26.1.0",
-    "ts-node": "^10.9.2",
-    "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.9.2",
-    "vite": "^7.0.6"
+    "typescript": "^5.9.2"
   }
 }
