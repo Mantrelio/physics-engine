@@ -17,6 +17,7 @@ export abstract class RigidBody {
     public angularAcceleration: number = 0;
     public rotationAngle: number = 0;
     public readonly inertia: number;
+    public color: string;
 
     constructor(options: ShapeConstructorParameters) {
         if (options.mass && options.mass <= 0) throw new Error('Rigid body mass must be greater than zero');
@@ -28,6 +29,7 @@ export abstract class RigidBody {
         this.shape = options.shape;
         this.angularVelocity = options.angularVelocity ?? 0;
         this.inertia = options.inertia;
+        this.color = options.color ?? '#0066cc';
     }
 
     public applyForce(force: Vector): void {

@@ -2,6 +2,7 @@ import { Vector } from "../../vectors/entities/vector.js";
 import { Shape } from "../enums/shape.enum.js";
 
 export interface ShapeConstructorParameters {
+    color: string;
     position: Vector;
     shape: Shape;
     inertia: number;
@@ -16,4 +17,5 @@ export interface PolygonConstructorParameters {
     mass?: number;
     velocity?: Vector;
     angularVelocity?: number;
+    color: string;
 }

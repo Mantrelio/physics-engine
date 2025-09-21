@@ -14,7 +14,8 @@ export class Rectangle extends Polygon {
             mass: config.mass,
             velocity: config.velocity,
             angularVelocity: config.angularVelocity,
-            inertia: inertia
+            inertia: inertia,
+            color: config.color ?? '#0066cc'
         });
 
         this.width = config.width;

@@ -18,6 +18,7 @@ export abstract class Polygon extends RigidBody {
             velocity: parameters.velocity,
             angularVelocity: parameters.angularVelocity,
             inertia: parameters.inertia,
+            color: parameters.color ?? '#0066cc',
         });
     }
     
@@ -28,7 +29,8 @@ export abstract class Polygon extends RigidBody {
             type: this.shape,
             x: this.position.x,
             y: this.position.y,
-            vertices: this.worldVertices
+            vertices: this.worldVertices,
+            color: this.color
         };
     }
 

@@ -13,7 +13,8 @@ export class Square extends Polygon {
             mass: config.mass,
             velocity: config.velocity,
             angularVelocity: config.angularVelocity,
-            inertia: inertia
+            inertia: inertia,
+            color: config.color ?? '#0066cc'
         });
 
         this.size = config.size;

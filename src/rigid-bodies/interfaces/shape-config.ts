@@ -5,6 +5,7 @@ export interface ShapeConfig {
     mass?: number;
     velocity?: Vector;
     angularVelocity?: number;
+    color?: string;
 }
 
 export interface CircleConfig extends ShapeConfig {

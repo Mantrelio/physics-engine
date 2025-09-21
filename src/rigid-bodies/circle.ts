@@ -6,7 +6,6 @@ import { CircleConfig } from "./interfaces/shape-config.js";
 import { Vector } from "../vectors/entities/vector.js";
 
 export class Circle extends RigidBody {
-    public readonly color: string = this.generateRandomColor();
     public readonly radius: number;
 
     constructor(config: CircleConfig) {
@@ -17,16 +16,10 @@ export class Circle extends RigidBody {
             velocity: config.velocity,
             angularVelocity: config.angularVelocity,
             inertia: 0.5 * (config.mass ?? 1) * config.radius * config.radius,
+            color: config.color ?? '#0066cc'
         });
 
         this.radius = config.radius;
-    }
-
-    private generateRandomColor(): string {
-        const hue = Math.floor(Math.random() * 360);
-        const saturation = Math.floor(Math.random() * 50) + 50;
-        const lightness = Math.floor(Math.random() * 30) + 40;
-        return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
     }
 
     public getRenderData(): CircleRenderData {
